@@ -49,7 +49,7 @@
     "preferred-install": "dist"
   },
   "extra": {
-    "contao-manager-plugin": "HeimrichHannot\\ContaoPrivacyApiBundle\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "HeimrichHannot\\PrivacyApiBundle\\ContaoManager\\Plugin"
   }
 }
 
