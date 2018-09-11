@@ -1,0 +1,12 @@
+services:
+  huh.privacy_api.backend.api_app:
+    public: true
+    class: HeimrichHannot\PrivacyApiBundle\Backend\PrivacyApiApp
+    arguments:
+    - "@contao.framework"
+  huh.privacy_api.routing.matcher:
+    class: Symfony\Component\HttpFoundation\RequestMatcher
+    calls:
+    - ["matchAttribute", ["_scope", "privacy_api"]]
+  huh.privacy_api.security.authenticator:
+    class:  HeimrichHannot\PrivacyApiBundle\Security\PrivacyApiAuthenticator

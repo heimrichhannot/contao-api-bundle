@@ -10,12 +10,13 @@ namespace HeimrichHannot\PrivacyApiBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/privacy-api", defaults={"_scope"="frontend","_token_check"=false})
+ * @Route("/privacy-api",defaults={"_scope"="privacy_api","_token_check"=false})
  */
 class PrivacyApiController extends Controller
 {
@@ -26,7 +27,7 @@ class PrivacyApiController extends Controller
      */
     public function authenticateAction(Request $request)
     {
-        return new Response('FOO');
+        return new JsonResponse([]);
     }
 
 }
