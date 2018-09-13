@@ -1,3 +1,3 @@
-privacy_api:
-  resource: "@ContaoPrivacyApiBundle/Controller"
+api:
+  resource: "@ContaoApiBundle/Controller"
   type: annotation

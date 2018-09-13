@@ -1,7 +1,7 @@
 {
-    "name": "heimrichhannot/contao-privacy-api-bundle",
+    "name": "heimrichhannot/contao-api-bundle",
     "type": "contao-bundle",
-    "description": "API to access (restricted) contao privacy module from 3rd-party applications.",
+    "description": "A generic API with restricted access to provide access to 3rd party applications.",
     "license": "LGPL-3.0-or-later",
     "require": {
         "php": "^7.1",
@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "HeimrichHannot\\PrivacyApiBundle\\": "src/"
+            "HeimrichHannot\\ApiBundle\\": "src/"
         },
         "classmap": [
             "src/"
@@ -43,14 +43,14 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "HeimrichHannot\\PrivacyApiBundle\\Test\\": "tests/"
+            "HeimrichHannot\\ApiBundle\\Test\\": "tests/"
         }
     },
     "config": {
         "preferred-install": "dist"
     },
     "extra": {
-        "contao-manager-plugin": "HeimrichHannot\\PrivacyApiBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "HeimrichHannot\\ApiBundle\\ContaoManager\\Plugin"
     }
 }
 

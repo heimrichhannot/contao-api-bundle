@@ -9,7 +9,7 @@
  */
 
 
-namespace HeimrichHannot\PrivacyApiBundle\ContaoManager;
+namespace HeimrichHannot\ApiBundle\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
@@ -19,7 +19,8 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-use HeimrichHannot\PrivacyApiBundle\ContaoPrivacyApiBundle;
+use HeimrichHannot\ApiBundle\ContaoApiBundle;
+use HeimrichHannot\ApiBundle\Entity\User;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -37,7 +38,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(ContaoPrivacyApiBundle::class)->setLoadAfter(
+            BundleConfig::create(ContaoApiBundle::class)->setLoadAfter(
                 [
                     ContaoCoreBundle::class,
                     'privacy',
@@ -51,7 +52,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
-        $file = '@ContaoPrivacyApiBundle/Resources/config/routing.yml';
+        $file = '@ContaoApiBundle/Resources/config/routing.yml';
 
         return $resolver->resolve($file)->load($file);
     }
@@ -61,25 +62,39 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
      */
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
-        if ('security' === $extensionName) {
+        if ('security' !== $extensionName) {
 
+            return $extensionConfigs;
+        }
 
-            $firewalls = [
-                'privacy_api' => [
-                    'request_matcher' => 'huh.privacy_api.routing.matcher',
-                    'stateless'       => true,
-                    'guard'           => [
-                        'authenticators' => ['huh.privacy_api.security.authenticator'],
-                    ],
+        $firewalls = [
+            'api_login' => [
+                'request_matcher' => 'huh.api.routing.login.matcher',
+                'stateless'       => true,
+                'guard'           => [
+                    'authenticators' => ['huh.api.member_authenticator'],
                 ],
-            ];
+                'provider'        => 'huh.api.security.user_provider',
+            ],
+            'api'       => [
+                'request_matcher' => 'huh.api.routing.matcher',
+                'stateless'       => true,
+                'guard'           => [
+                    'authenticators' => ['huh.api.security.authenticator'],
+                ],
+                'provider'        => 'huh.api.security.user_provider',
+            ],
+        ];
 
-            foreach ($extensionConfigs as &$extensionConfig) {
-                if (isset($extensionConfig['firewalls'])
-                    && is_array($extensionConfig['firewalls'])) {
-                    $extensionConfig['firewalls'] = $extensionConfig['firewalls'] + $firewalls;
-                }
-            }
+        $providers = [
+            'huh.api.security.user_provider' => [
+                'id' => 'huh.api.security.user_provider',
+            ],
+        ];
+
+        foreach ($extensionConfigs as &$extensionConfig) {
+            $extensionConfig['firewalls'] = (isset($extensionConfig['firewalls']) && is_array($extensionConfig['firewalls']) ? $extensionConfig['firewalls'] : []) + $firewalls;
+            $extensionConfig['providers'] = (isset($extensionConfig['providers']) && is_array($extensionConfig['providers']) ? $extensionConfig['providers'] : []) + $providers;
         }
 
         return $extensionConfigs;

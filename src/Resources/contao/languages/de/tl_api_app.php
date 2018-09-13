@@ -1,6 +1,6 @@
 <?php
 
-$lang = &$GLOBALS['TL_LANG']['tl_privacy_api_app'];
+$lang = &$GLOBALS['TL_LANG']['tl_api_app'];
 
 /**
  * Fields
@@ -9,7 +9,7 @@ $lang['tstamp']    = ['Änderungsdatum', 'Letztes Änderungsdatum des Datensatze
 $lang['dateAdded'] = ['Erstellungsdatum', 'Datum der Erstellung des Datensatzes.'];
 $lang['title']     = ['Titel', 'Geben Sie hier bitte den Titel ein.'];
 $lang['published'] = ['Veröffentlichen', 'Wählen Sie diese Option zum Veröffentlichen.'];
-$lang['apiKey']    = ['API-Schlüssel', 'Dieser individuelle Schlüssel muss bei jeder Verbindung mit der API übermittelt werden.'];
+$lang['key']       = ['API-Schlüssel', 'Dieser automatisch erzeugte Schlüssel muss bei jeder Verbindung mit der API übermittelt werden.'];
 $lang['groups']    = ['Erlaubte Mitgliedergruppen', 'Zugriff nur folgenden Mitglieder-Gruppen gewähren.'];
 $lang['start']     = ['Anzeigen ab', 'Anwendung erst ab diesem Tag freischalten.'];
 $lang['stop']      = ['Anzeigen bis', 'Anwendung nur bis zu diesem Tag freischalten.'];

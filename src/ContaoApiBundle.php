@@ -6,18 +6,18 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\PrivacyApiBundle;
+namespace HeimrichHannot\ApiBundle;
 
-use HeimrichHannot\PrivacyApiBundle\DependencyInjection\PrivacyApiExtension;
+use HeimrichHannot\ApiBundle\DependencyInjection\ApiExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ContaoPrivacyApiBundle extends Bundle
+class ContaoApiBundle extends Bundle
 {
     /**
      * {@inheritdoc}
      */
     public function getContainerExtension()
     {
-        return new PrivacyApiExtension();
+        return new ApiExtension();
     }
 }

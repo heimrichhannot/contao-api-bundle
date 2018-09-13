@@ -1,12 +1,31 @@
 services:
-  huh.privacy_api.backend.api_app:
+  huh.api.backend.api_app:
     public: true
-    class: HeimrichHannot\PrivacyApiBundle\Backend\PrivacyApiApp
+    class: HeimrichHannot\ApiBundle\Backend\ApiApp
     arguments:
     - "@contao.framework"
-  huh.privacy_api.routing.matcher:
+  huh.api.routing.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
-    - ["matchAttribute", ["_scope", "privacy_api"]]
-  huh.privacy_api.security.authenticator:
-    class:  HeimrichHannot\PrivacyApiBundle\Security\PrivacyApiAuthenticator
+    - ["matchAttribute", ["_scope", "api"]]
+  huh.api.routing.login.matcher:
+    class: Symfony\Component\HttpFoundation\RequestMatcher
+    calls:
+    - ["matchAttribute", ["_scope", "api_login"]]
+  huh.api.jwt_coder:
+    class: HeimrichHannot\ApiBundle\Security\JWTCoder
+    arguments:
+    - "%secret%"
+  huh.api.security.authenticator:
+    class:  HeimrichHannot\ApiBundle\Security\ApiAuthenticator
+    arguments:
+    - "@contao.framework"
+    - "@huh.api.jwt_coder"
+  huh.api.security.user_provider:
+    class: HeimrichHannot\ApiBundle\Security\User\ApiUserProvider
+    arguments:
+    - "@contao.framework"
+  huh.api.member_authenticator:
+    class: HeimrichHannot\ApiBundle\Security\MemberAuthenticator
+    arguments:
+    - "@security.password_encoder"

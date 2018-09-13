@@ -6,12 +6,9 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-namespace HeimrichHannot\PrivacyApiBundle\Model;
+namespace HeimrichHannot\ApiBundle\Exception;
 
 
-use Contao\Model;
-
-class PrivacyApiAppModel extends Model
+class InvalidJWTException extends \UnexpectedValueException
 {
-    protected static $strTable = 'tl_privacy_api_app';
 }

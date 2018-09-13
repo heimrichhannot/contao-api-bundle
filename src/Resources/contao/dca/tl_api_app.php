@@ -1,11 +1,11 @@
 <?php
 
-$GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
+$GLOBALS['TL_DCA']['tl_api_app'] = [
     'config'      => [
         'dataContainer'     => 'Table',
         'enableVersioning'  => true,
         'onload_callback'   => [
-            ['huh.privacy_api.backend.api_app', 'checkPermission'],
+            ['huh.api.backend.api_app', 'checkPermission'],
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -17,6 +17,7 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
             'keys' => [
                 'id'                   => 'primary',
                 'start,stop,published' => 'index',
+                'key'                  => 'unique',
             ],
         ],
     ],
@@ -40,29 +41,29 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
         ],
         'operations'        => [
             'edit'   => [
-                'label' => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['edit'],
+                'label' => &$GLOBALS['TL_LANG']['tl_api_app']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.gif',
             ],
             'copy'   => [
-                'label' => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['copy'],
+                'label' => &$GLOBALS['TL_LANG']['tl_api_app']['copy'],
                 'href'  => 'act=copy',
                 'icon'  => 'copy.gif',
             ],
             'delete' => [
-                'label'      => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['delete'],
+                'label'      => &$GLOBALS['TL_LANG']['tl_api_app']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
                 'attributes' => 'onclick="if(!confirm(\''.$GLOBALS['TL_LANG']['MSC']['deleteConfirm'].'\'))return false;Backend.getScrollOffset()"',
             ],
             'toggle' => [
-                'label'           => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['toggle'],
+                'label'           => &$GLOBALS['TL_LANG']['tl_api_app']['toggle'],
                 'icon'            => 'visible.gif',
                 'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
                 'button_callback' => ['huh.filter.backend.filter_config_element', 'toggleIcon'],
             ],
             'show'   => [
-                'label' => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['show'],
+                'label' => &$GLOBALS['TL_LANG']['tl_api_app']['show'],
                 'href'  => 'act=show',
                 'icon'  => 'show.gif',
             ],
@@ -70,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
     ],
     'palettes'    => [
         '__selector__' => ['published'],
-        'default'      => '{general_legend},title,author;{security_legend},apiKey,groups;{publish_legend},published',
+        'default'      => '{general_legend},title,author;{security_legend},key,groups;{publish_legend},published',
     ],
     'subpalettes' => [
         'published' => 'start,stop',
@@ -80,12 +81,12 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
             'sql' => "int(10) unsigned NOT NULL auto_increment",
         ],
         'tstamp'    => [
-            'label' => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['tstamp'],
+            'label' => &$GLOBALS['TL_LANG']['tl_api_app']['tstamp'],
             'eval'  => ['rgxp' => 'datim'],
             'sql'   => "varchar(64) NOT NULL default ''",
         ],
         'dateAdded' => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['dateAdded'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['dateAdded'],
             'sorting'   => true,
             'flag'      => 7,
             'inputType' => 'text',
@@ -93,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
         'title'     => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['title'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['title'],
             'flag'      => 1,
             'exclude'   => true,
             'search'    => true,
@@ -102,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'groups'    => [
-            'label'      => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['groups'],
+            'label'      => &$GLOBALS['TL_LANG']['tl_api_app']['groups'],
             'exclude'    => true,
             'inputType'  => 'checkbox',
             'foreignKey' => 'tl_member_group.name',
@@ -110,16 +111,16 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
             'sql'        => "blob NULL",
             'relation'   => ['type' => 'hasMany', 'load' => 'lazy'],
         ],
-        'apiKey'    => [
-            'label'         => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['apiKey'],
+        'key'       => [
+            'label'         => &$GLOBALS['TL_LANG']['tl_api_app']['key'],
             'search'        => true,
             'inputType'     => 'text',
-            'load_callback' => [['huh.privacy_api.backend.api_app', 'generateApiToken']],
-            'eval'          => ['mandatory' => true, 'tl_class' => 'clr long', 'readonly' => true],
+            'load_callback' => [['huh.api.backend.api_app', 'generateApiToken']],
+            'eval'          => ['tl_class' => 'clr long', 'unique' => true],
             'sql'           => "varchar(255) NOT NULL default ''",
         ],
         'published' => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['published'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['published'],
             'exclude'   => true,
             'filter'    => true,
             'inputType' => 'checkbox',
@@ -127,14 +128,14 @@ $GLOBALS['TL_DCA']['tl_privacy_api_app'] = [
             'sql'       => "char(1) NOT NULL default ''",
         ],
         'start'     => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['start'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['start'],
             'exclude'   => true,
             'inputType' => 'text',
             'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'],
             'sql'       => "varchar(10) NOT NULL default ''",
         ],
         'stop'      => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_api_app']['stop'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['stop'],
             'exclude'   => true,
             'inputType' => 'text',
             'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'],

@@ -6,20 +6,17 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-namespace HeimrichHannot\PrivacyApiBundle\Security;
+namespace HeimrichHannot\ApiBundle\Security;
 
 
-use HeimrichHannot\PrivacyApiBundle\Security\User\PrivacyApiUserProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
-class PrivacyApiAuthenticator extends AbstractGuardAuthenticator
+abstract class GuardAuthenticator extends AbstractGuardAuthenticator
 {
     /**
      * Called when authentication is needed, but it's not sent
@@ -35,50 +32,12 @@ class PrivacyApiAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * Called on every request. Return whatever credentials you want to
-     * be passed to getUser() as $credentials.
-     */
-    public function getCredentials(Request $request)
-    {
-        return array(
-            'token' => $request->headers->get('X-AUTH-TOKEN'),
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getUser($credentials, UserProviderInterface $userProvider)
-    {
-        $apiKey = $credentials['token'];
-
-        if (null === $apiKey) {
-            return;
-        }
-
-        // if a User object, checkCredentials() is called
-        return $userProvider->loadUserByUsername($apiKey);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function checkCredentials($credentials, UserInterface $user)
-    {
-        // check credentials - e.g. make sure the password is valid
-        // no credential check is needed in this case
-
-        // return true to cause authentication success
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = [
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($exception->getMessage(), $exception->getMessageData())
 
             // or to translate this message
             // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
