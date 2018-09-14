@@ -13,8 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/api",defaults={"_format": "json","_scope"="api_login","_token_check"=false})
@@ -24,8 +23,7 @@ class ApiUserController extends Controller
     /**
      * @return Response
      *
-     * @Route("/login", name="api_login")
-     * @Method({"POST"})
+     * @Route("/login", name="api_login", methods={"POST"})
      */
     public function loginAction(Request $request)
     {
