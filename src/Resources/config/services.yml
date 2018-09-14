@@ -27,5 +27,3 @@ services:
     - "@contao.framework"
   huh.api.member_authenticator:
     class: HeimrichHannot\ApiBundle\Security\MemberAuthenticator
-    arguments:
-    - "@security.password_encoder"

@@ -15,31 +15,22 @@ use Contao\System;
 use HeimrichHannot\ApiBundle\Security\User\MemberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class MemberAuthenticator extends GuardAuthenticator
 {
-    private $passwordEncoder;
-
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-    {
-        $this->passwordEncoder = $passwordEncoder;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getCredentials(Request $request)
     {
-        if (!$request->isMethod('POST')) {
-            throw new NotAcceptableHttpException(sprintf('HTTP-Method "%s" forbidden, only "POST" permitted.', $request->getMethod()));
-        }
-
         return [
             'username' => $request->getUser() ?: $request->request->get('username'),
             'password' => $request->getPassword() ?: $request->request->get('password'),

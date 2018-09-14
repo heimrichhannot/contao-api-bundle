@@ -14,9 +14,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Method
 
 /**
- * @Route("/api",defaults={"_scope"="api_login","_token_check"=false})
+ * @Route("/api",defaults={"_format": "json","_scope"="api_login","_token_check"=false})
  */
 class ApiUserController extends Controller
 {
@@ -24,11 +25,10 @@ class ApiUserController extends Controller
      * @return Response
      *
      * @Route("/login", name="api_login")
+     * @Method({"POST"})
      */
     public function loginAction(Request $request)
     {
-        $foo = 'bar';
-
         $token = $this->get('huh.api.jwt_coder')->encode(
             [
                 'username' => $this->getUser()->getUsername(),

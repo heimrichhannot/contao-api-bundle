@@ -48,8 +48,8 @@ class ApiUserProvider implements ContainerAwareInterface, UserProviderInterface
     {
         $this->framework->initialize();
 
-        if ('' === $username) {
-            throw new \InvalidArgumentException('No valid user name provided');
+        if (!$username) {
+            throw new UsernameNotFoundException('No valid user name provided');
         }
 
         /** @var MemberModel $model */
