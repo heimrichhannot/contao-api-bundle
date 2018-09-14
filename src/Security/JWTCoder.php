@@ -48,11 +48,11 @@ class JWTCoder
         try {
             $payload = JWT::decode($token, $this->key, [self::ALG]);
         } catch (\Exception $e) {
-            throw new InvalidJWTException('Invalid token');
+            throw new InvalidJWTException('huh.api.exception.auth.invalid_token');
         }
 
         if ($this->isExpired($payload)) {
-            throw new InvalidJWTException('Token expired');
+            throw new InvalidJWTException('huh.api.exception.auth.token_expired');
         }
 
         return $payload;

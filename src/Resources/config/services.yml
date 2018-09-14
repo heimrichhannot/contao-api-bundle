@@ -21,9 +21,15 @@ services:
     arguments:
     - "@contao.framework"
     - "@huh.api.jwt_coder"
+    - "@translator"
   huh.api.security.user_provider:
     class: HeimrichHannot\ApiBundle\Security\User\ApiUserProvider
     arguments:
     - "@contao.framework"
+    - "@translator"
   huh.api.member_authenticator:
     class: HeimrichHannot\ApiBundle\Security\MemberAuthenticator
+    arguments:
+    - "@contao.framework"
+    - "@huh.api.jwt_coder"
+    - "@translator"

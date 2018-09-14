@@ -1,0 +1,16 @@
+# exception messages
+huh.api.exception.auth.invalid_credentials: Ungültiger Benutzername oder Passwort
+huh.api.exception.auth.post_method_only: Anmeldung nur per POST-Anfrage möglich.
+huh.api.exception.auth.refresh_not_possible: Nutzer kann nicht aktualisiert werden.
+huh.api.exception.auth.invalid_username: Ungültiger Nutzername
+huh.api.exception.auth.user_not_found: 'Benutzer mit dem Namen %username% wurde nicht gefunden'
+huh.api.exception.auth.user_not_exists: 'Benutzer mit dem Namen %username% existiert nicht'
+huh.api.exception.auth.invalid_token: Ungültiger Token
+huh.api.exception.auth.token_expired: Token abgelaufen
+huh.api.exception.auth.missing_authorization_header: Fehlender Autorisierungs-Header
+huh.api.exception.auth.malformed_authorization_header: Fehlerhafter Autorisierungs-Header
+huh.api.exception.auth.missing_api_key: Fehlender API-Schlüssel
+huh.api.exception.auth.invalid_api_key: Ungültiger API-Schlüssel
+huh.api.exception.auth.malformed_jwt: Fehlerhafter JWT-Token
+huh.api.exception.auth.invalid_jwt: Ungültiger JWT-Token
+huh.api.exception.auth.user_not_allowed_for_api: 'Der Nutzer hat keinen Zugriff auf die API mit dem Schlüssel %key%'

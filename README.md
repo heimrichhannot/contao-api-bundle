@@ -14,10 +14,11 @@ After successful login a volatile token (default: `24 hours`) will be returned t
 
 ```
 # test login
-curl -x POST -u username:password http://domain.tld/api/login
+curl --user username:password -H "Content-Type: application/json" -X POST http://domain.tld/api/login
 
 # example response on success
 {
     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmXtZSI6ImRpZ2l0YWxlc0BoZWltcmljaA1oYW5ub3QuZGUiLCJpYXQiOjE1MzY4NTYwMDMsImV4cCI6MTUzNjk0MjQwM30.trp-1NgYgXGfHYdE3dlQ8awE8aXUWL-RfBQyfWm2Hz0"
 }
 ```
+

@@ -11,6 +11,7 @@ namespace HeimrichHannot\ApiBundle\Security;
 
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
 use HeimrichHannot\ApiBundle\Security\User\MemberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +24,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class MemberAuthenticator extends GuardAuthenticator
 {
@@ -31,6 +33,12 @@ class MemberAuthenticator extends GuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
+        $this->translator->setLocale($request->getPreferredLanguage());
+
+        if ('POST' !== $request->getMethod()) {
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.post_method_only'));
+        }
+
         return [
             'username' => $request->getUser() ?: $request->request->get('username'),
             'password' => $request->getPassword() ?: $request->request->get('password'),
@@ -51,7 +59,7 @@ class MemberAuthenticator extends GuardAuthenticator
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        $time = time();
+        $time          = time();
         $authenticated = password_verify($credentials['password'], $user->getPassword());
         $needsRehash   = password_needs_rehash($user->getPassword(), PASSWORD_DEFAULT);
 
@@ -75,8 +83,7 @@ class MemberAuthenticator extends GuardAuthenticator
         if (!$authenticated) {
             $user->setLoginCount($user->getLoginCount() - 1);
             $user->getModel()->save();
-
-            return false;
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_credentials'));
         }
 
         $user->setLastLogin($user->getCurrentLogin());

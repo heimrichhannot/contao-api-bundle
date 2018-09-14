@@ -62,11 +62,26 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
      */
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
-        if ('security' !== $extensionName) {
+        if ('security' === $extensionName) {
+
+            $extensionConfigs = $this->getSecurityExtensionConfig($extensionConfigs, $container);
 
             return $extensionConfigs;
         }
 
+        return $extensionConfigs;
+    }
+
+    /**
+     * Get security extension config
+     *
+     * @param array            $extensionConfigs
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    public function getSecurityExtensionConfig(array $extensionConfigs, ContainerBuilder $container)
+    {
         $firewalls = [
             'api_login' => [
                 'request_matcher' => 'huh.api.routing.login.matcher',

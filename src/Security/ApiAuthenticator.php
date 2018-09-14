@@ -17,49 +17,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ApiAuthenticator extends GuardAuthenticator
 {
-    /**
-     * @var JWTCoder
-     */
-    private $jwtCoder;
-
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
-     * ApiAuthenticator constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param JWTCoder                 $jwtCoder
-     */
-    public function __construct(ContaoFrameworkInterface $framework, JWTCoder $jwtCoder)
-    {
-        $this->framework = $framework;
-        $this->jwtCoder  = $jwtCoder;
-    }
-
     /**
      * Called on every request. Return whatever credentials you want to
      * be passed to getUser() as $credentials.
      */
     public function getCredentials(Request $request)
     {
+        $this->translator->setLocale($request->getPreferredLanguage());
+
         if (!$request->headers->has('Authorization')) {
-            throw new AuthenticationException('Missing Authorization Header');
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_authorization_header'));
         }
 
         $headerParts = explode(' ', $request->headers->get('Authorization'));
 
         if (!(count($headerParts) === 2 && $headerParts[0] === 'Bearer')) {
-            throw new AuthenticationException('Malformed Authorization Header');
+            throw new AuthenticationException('huh.api.exception.auth.malformed_authorization_header');
         }
 
         if (!$request->query->get('key')) {
-            throw new AuthenticationException('Missing API key.');
+            throw new AuthenticationException('huh.api.exception.auth.missing_api_key.');
         }
 
         return [
@@ -76,13 +57,13 @@ class ApiAuthenticator extends GuardAuthenticator
         try {
             $payload = $this->jwtCoder->decode($credentials['token']);
         } catch (InvalidJWTException $e) {
-            throw new AuthenticationException($e->getMessage());
+            throw new AuthenticationException($this->translator->trans($e->getMessage()));
         } catch (\Exception $e) {
-            throw new AuthenticationException('Malformed JWT');
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.malformed_jwt'));
         }
 
         if (!isset($payload->username)) {
-            throw new AuthenticationException('Invalid JWT');
+            throw new AuthenticationException('huh.api.exception.auth.invalid_jwt');
         }
 
         // if a User object, checkCredentials() is called
@@ -98,11 +79,11 @@ class ApiAuthenticator extends GuardAuthenticator
         $appModel = $this->framework->createInstance(ApiAppModel::class);
 
         if (null === ($appModel = $appModel->findPublishedByKey($credentials['key']))) {
-            throw new AuthenticationException('Invalid API key.');
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_api_key'));
         }
 
         if (empty($user->getRoles()) || empty(array_intersect(StringUtil::deserialize($appModel->groups, true), $user->getRoles()))) {
-            throw new AuthenticationException(sprintf('Given user has no access to API with key %s.', $credentials['key']));
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.user_not_allowed_for_api', ['%key%' => $credentials['key']]));
         }
 
         // if user object is present here, JWT token did already match
