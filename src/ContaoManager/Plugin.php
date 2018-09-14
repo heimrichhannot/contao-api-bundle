@@ -87,7 +87,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
                 'request_matcher' => 'huh.api.routing.login.matcher',
                 'stateless'       => true,
                 'guard'           => [
-                    'authenticators' => ['huh.api.member_authenticator'],
+                    'authenticators' => ['huh.api.security.member_authenticator'],
                 ],
                 'provider'        => 'huh.api.security.user_provider',
             ],

@@ -27,7 +27,7 @@ services:
     arguments:
     - "@contao.framework"
     - "@translator"
-  huh.api.member_authenticator:
+  huh.api.security.member_authenticator:
     class: HeimrichHannot\ApiBundle\Security\MemberAuthenticator
     arguments:
     - "@contao.framework"
