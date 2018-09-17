@@ -10,18 +10,18 @@ namespace HeimrichHannot\ApiBundle\Security\User;
 
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\MemberModel;
+use Contao\Model;
 use Contao\System;
-use Contao\User;
+use HeimrichHannot\ApiBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ApiUserProvider implements ContainerAwareInterface, UserProviderInterface
+class UserProvider implements ContainerAwareInterface, UserProviderInterface
 {
     use ContainerAwareTrait;
 
@@ -36,6 +36,11 @@ class ApiUserProvider implements ContainerAwareInterface, UserProviderInterface
     private $translator;
 
     /**
+     * @var string
+     */
+    protected $modelClass;
+
+    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
@@ -46,19 +51,16 @@ class ApiUserProvider implements ContainerAwareInterface, UserProviderInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadUserByUsername($username)
+    public function loadUserByEntityAndUsername(UserInterface $user, $username)
     {
         $this->framework->initialize();
+
+
         if (!$username) {
             throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.invalid_username'));
         }
 
-        /** @var MemberModel $model */
-        $model = $this->framework->createInstance(MemberModel::class);
-        if (null === ($model = $model->findBy('username', $username))) {
+        if (null === ($user = $user->findBy('username', $username))) {
 
             $loaded = false;
 
@@ -75,33 +77,52 @@ class ApiUserProvider implements ContainerAwareInterface, UserProviderInterface
             }
 
             // Return if the user still cannot be loaded
-            if (!$loaded || null === ($model = $model->findBy('username', $username))) {
+            if (!$loaded || null === ($user = $user->findBy('username', $username))) {
                 throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_found', ['%username%' => $username]));
             }
 
             throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_exists', ['%username%' => $username]));
         }
 
-        $user = new \HeimrichHannot\ApiBundle\Entity\User();
-        $user->setModel($model);
-
         return $user;
+    }
+
+    /**
+     * @var array $attributes
+     * {@inheritdoc}
+     */
+    public function loadUserByUsername($attributes)
+    {
+        $this->framework->initialize();
+
+        if(!isset($attributes['entity']) || empty($attributes['entity'])){
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
+        }
+
+        $class = $this->container->getParameter($attributes['entity']);
+
+        if(!class_exists($class)){
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
+        }
+
+        $user  = new $class($this->framework);
+
+        return $this->loadUserByEntityAndUsername($user, $attributes['username']);
     }
 
     /**
      * @inheritDoc
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(\Symfony\Component\Security\Core\User\UserInterface $user)
     {
         throw new UnsupportedUserException($this->translator->trans('huh.api.exception.auth.refresh_not_possible'));
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function supportsClass($class)
     {
         return is_subclass_of($class, User::class);
     }
-
 }

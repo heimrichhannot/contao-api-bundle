@@ -7,10 +7,13 @@ $lang = &$GLOBALS['TL_LANG']['tl_api_app'];
  */
 $lang['tstamp']    = ['Änderungsdatum', 'Letztes Änderungsdatum des Datensatzes.'];
 $lang['dateAdded'] = ['Erstellungsdatum', 'Datum der Erstellung des Datensatzes.'];
+$lang['type']      = ['Typ', 'Wählen Sie einen Typ aus.'];
 $lang['title']     = ['Titel', 'Geben Sie hier bitte den Titel ein.'];
-$lang['published'] = ['Veröffentlichen', 'Wählen Sie diese Option zum Veröffentlichen.'];
+$lang['resource']  = ['Resource', 'Wählen Sie einen Resource aus.'];
 $lang['key']       = ['API-Schlüssel', 'Dieser automatisch erzeugte Schlüssel muss bei jeder Verbindung mit der API übermittelt werden.'];
-$lang['groups']    = ['Erlaubte Mitgliedergruppen', 'Zugriff nur folgenden Mitglieder-Gruppen gewähren.'];
+$lang['groups']    = ['Erlaubte Benutzergruppen', 'Zugriff nur folgenden Benutzergruppen gewähren.'];
+$lang['mGroups']   = ['Erlaubte Mitgliedegruppen', 'Zugriff nur folgenden Mitgliedergruppen gewähren.'];
+$lang['published'] = ['Veröffentlichen', 'Wählen Sie diese Option zum Veröffentlichen.'];
 $lang['start']     = ['Anzeigen ab', 'Anwendung erst ab diesem Tag freischalten.'];
 $lang['stop']      = ['Anzeigen bis', 'Anwendung nur bis zu diesem Tag freischalten.'];
 
@@ -18,6 +21,7 @@ $lang['stop']      = ['Anzeigen bis', 'Anwendung nur bis zu diesem Tag freischal
  * Legends
  */
 $lang['general_legend']  = 'Allgemeine Einstellungen';
+$lang['resource_legend'] = 'Resource';
 $lang['security_legend'] = 'Sicherheit';
 $lang['publish_legend']  = 'Veröffentlichung';
 
@@ -30,3 +34,9 @@ $lang['copy']   = ['Anwendung duplizieren', 'Anwendung ID %s duplizieren'];
 $lang['delete'] = ['Anwendung löschen', 'Anwendung ID %s löschen'];
 $lang['toggle'] = ['Anwendung veröffentlichen', 'Anwendung ID %s veröffentlichen/verstecken'];
 $lang['show']   = ['Anwendung Details', 'Anwendung-Details ID %s anzeigen'];
+
+
+/**
+ * Resources
+ */
+$lang['reference']['type']['resource'] = 'Resource';

@@ -20,7 +20,7 @@ use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use HeimrichHannot\ApiBundle\ContaoApiBundle;
-use HeimrichHannot\ApiBundle\Entity\User;
+use HeimrichHannot\ApiBundle\Entity\Member;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -84,11 +84,19 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
     public function getSecurityExtensionConfig(array $extensionConfigs, ContainerBuilder $container)
     {
         $firewalls = [
-            'api_login' => [
-                'request_matcher' => 'huh.api.routing.login.matcher',
+            'api_login_member' => [
+                'request_matcher' => 'huh.api.routing.login.member.matcher',
                 'stateless'       => true,
                 'guard'           => [
-                    'authenticators' => ['huh.api.security.member_authenticator'],
+                    'authenticators' => ['huh.api.security.username_password_authenticator'],
+                ],
+                'provider'        => 'huh.api.security.user_provider',
+            ],
+            'api_login_user' => [
+                'request_matcher' => 'huh.api.routing.login.user.matcher',
+                'stateless'       => true,
+                'guard'           => [
+                    'authenticators' => ['huh.api.security.username_password_authenticator'],
                 ],
                 'provider'        => 'huh.api.security.user_provider',
             ],
@@ -96,7 +104,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
                 'request_matcher' => 'huh.api.routing.matcher',
                 'stateless'       => true,
                 'guard'           => [
-                    'authenticators' => ['huh.api.security.authenticator'],
+                    'authenticators' => ['huh.api.security.token_authenticator'],
                 ],
                 'provider'        => 'huh.api.security.user_provider',
             ],

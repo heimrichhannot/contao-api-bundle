@@ -8,17 +8,37 @@
 
 namespace HeimrichHannot\ApiBundle\Entity;
 
-use Contao\MemberModel;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Model;
 use Contao\StringUtil;
-use Contao\System;
-use HeimrichHannot\ApiBundle\Security\User\MemberInterface;
+use Contao\UserModel;
+use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use HeimrichHannot\ApiBundle\Security\User\UserInterface;
 
-class User implements MemberInterface
+class User implements UserInterface
 {
     /**
-     * @var MemberModel
+     * @var UserModel
      */
-    private $_model;
+    protected $_model;
+
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected static $table = 'tl_user';
+
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
 
     /**
      * @inheritDoc
@@ -93,11 +113,6 @@ class User implements MemberInterface
             return false;
         }
 
-        // Check wether login is allowed (front end only)
-        if (false === (bool)$this->_model->login) {
-            return false;
-        }
-
         // Check whether account is not active yet or anymore
         if ($this->_model->start != '' || $this->_model->stop != '') {
             $time = \Date::floorToMinute($time);
@@ -141,7 +156,7 @@ class User implements MemberInterface
     /**
      * @inheritDoc
      */
-    public function setModel(MemberModel $model)
+    public function setModel(Model $model)
     {
         $this->_model = $model->current();
     }
@@ -149,7 +164,7 @@ class User implements MemberInterface
     /**
      * @inheritDoc
      */
-    public function getModel(): MemberModel
+    public function getModel(): Model
     {
         return $this->_model;
     }
@@ -201,4 +216,53 @@ class User implements MemberInterface
     {
         return $this->_model->currentLogin;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findBy($key, $value): ?UserInterface
+    {
+        $class = Model::getClassFromTable(static::$table);
+
+        if (!class_exists($class)) {
+            return null;
+        }
+
+        /** @var UserModel $model */
+        $model = $this->framework->createInstance($class);
+
+        $this->_model = $model->findBy($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasApiAccess(ApiAppModel $model): bool
+    {
+        // allow access to administrators
+        if (true === (bool)$this->_model->admin) {
+            return true;
+        }
+
+        if (empty($this->getRoles())) {
+            return false;
+        }
+
+        $groups = StringUtil::deserialize($model->groups, true);
+
+        if(empty($groups))
+        {
+            return false;
+        }
+
+        if (empty(array_intersect($groups, $this->getRoles()))) {
+            return false;
+        }
+
+        return true;
+    }
+
+
 }

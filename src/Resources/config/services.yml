@@ -1,4 +1,14 @@
+parameters:
+  huh.api.entity.user: HeimrichHannot\ApiBundle\Entity\User
+  huh.api.entity.member: HeimrichHannot\ApiBundle\Entity\Member
 services:
+  _instanceof:
+    Contao\CoreBundle\Framework\FrameworkAwareInterface:
+      calls:
+      - ["setFramework", ["@contao.framework"]]
+    Symfony\Component\DependencyInjection\ContainerAwareInterface:
+      calls:
+      - ["setContainer", ["@service_container"]]
   huh.api.backend.api_app:
     public: true
     class: HeimrichHannot\ApiBundle\Backend\ApiApp
@@ -8,28 +18,40 @@ services:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
     - ["matchAttribute", ["_scope", "api"]]
-  huh.api.routing.login.matcher:
+  huh.api.routing.login.member.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
-    - ["matchAttribute", ["_scope", "api_login"]]
+    - ["matchAttribute", ["_scope", "api_login_member"]]
+  huh.api.routing.login.user.matcher:
+    class: Symfony\Component\HttpFoundation\RequestMatcher
+    calls:
+    - ["matchAttribute", ["_scope", "api_login_user"]]
   huh.api.jwt_coder:
     class: HeimrichHannot\ApiBundle\Security\JWTCoder
     arguments:
     - "%secret%"
-  huh.api.security.authenticator:
-    class:  HeimrichHannot\ApiBundle\Security\ApiAuthenticator
+  huh.api.security.token_authenticator:
+    class:  HeimrichHannot\ApiBundle\Security\TokenAuthenticator
     arguments:
     - "@contao.framework"
     - "@huh.api.jwt_coder"
     - "@translator"
   huh.api.security.user_provider:
-    class: HeimrichHannot\ApiBundle\Security\User\ApiUserProvider
+    class: HeimrichHannot\ApiBundle\Security\User\UserProvider
     arguments:
     - "@contao.framework"
     - "@translator"
-  huh.api.security.member_authenticator:
-    class: HeimrichHannot\ApiBundle\Security\MemberAuthenticator
+  huh.api.security.username_password_authenticator:
+    class: HeimrichHannot\ApiBundle\Security\UsernamePasswordAuthenticator
     arguments:
     - "@contao.framework"
     - "@huh.api.jwt_coder"
     - "@translator"
+  huh.api.manager.resource:
+    class: HeimrichHannot\ApiBundle\Manager\ApiResourceManager
+    arguments:
+    - "@contao.framework"
+  huh.api.resource.member:
+    class: HeimrichHannot\ApiBundle\ApiResource\MemberResource
+    tags:
+    - { name: huh.api.resource, alias: member}

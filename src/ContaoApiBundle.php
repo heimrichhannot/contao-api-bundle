@@ -9,6 +9,8 @@
 namespace HeimrichHannot\ApiBundle;
 
 use HeimrichHannot\ApiBundle\DependencyInjection\ApiExtension;
+use HeimrichHannot\ApiBundle\DependencyInjection\Compiler\ApiResourcePass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoApiBundle extends Bundle
@@ -19,5 +21,13 @@ class ContaoApiBundle extends Bundle
     public function getContainerExtension()
     {
         return new ApiExtension();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new ApiResourcePass());
     }
 }

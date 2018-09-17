@@ -15,10 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Translation\TranslatorInterface;
 
-abstract class GuardAuthenticator extends AbstractGuardAuthenticator
+abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Guard\AbstractGuardAuthenticator
 {
     /**
      * @var JWTCoder
@@ -36,15 +35,15 @@ abstract class GuardAuthenticator extends AbstractGuardAuthenticator
     protected $translator;
 
     /**
-     * ApiAuthenticator constructor.
+     * TokenAuthenticator constructor.
      *
      * @param ContaoFrameworkInterface $framework
      * @param JWTCoder                 $jwtCoder
      */
     public function __construct(ContaoFrameworkInterface $framework, JWTCoder $jwtCoder, TranslatorInterface $translator)
     {
-        $this->framework = $framework;
-        $this->jwtCoder  = $jwtCoder;
+        $this->framework  = $framework;
+        $this->jwtCoder   = $jwtCoder;
         $this->translator = $translator;
     }
 

@@ -8,25 +8,26 @@
 
 namespace HeimrichHannot\ApiBundle\Security\User;
 
-use Contao\MemberModel;
+use Contao\Model;
+use HeimrichHannot\ApiBundle\Model\ApiAppModel;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
-interface MemberInterface extends AdvancedUserInterface
+interface UserInterface extends AdvancedUserInterface
 {
     /**
      * Set current contao member model
      *
-     * @param MemberModel $model
+     * @param Model $model
      *
      */
-    public function setModel(MemberModel $model);
+    public function setModel(Model $model);
 
     /**
      * Get the current contao member model
      *
-     * @return MemberModel
+     * @return Model
      */
-    public function getModel(): MemberModel;
+    public function getModel(): Model;
 
     /**
      * Set login count
@@ -77,4 +78,24 @@ interface MemberInterface extends AdvancedUserInterface
      * @return int
      */
     public function getCurrentLogin(): int;
+
+
+    /**
+     * Find model by value
+     *
+     * @param $key
+     * @param $value
+     *
+     * @return UserInterface|null
+     */
+    public function findBy($key, $value): ?UserInterface;
+
+    /**
+     * Check if user has access to current app
+     *
+     * @param ApiAppModel $model
+     *
+     * @return bool
+     */
+    public function hasApiAccess(ApiAppModel $model): bool;
 }

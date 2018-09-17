@@ -10,23 +10,13 @@ namespace HeimrichHannot\ApiBundle\Security;
 
 
 use Contao\Config;
-use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
-use HeimrichHannot\ApiBundle\Security\User\MemberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
-class MemberAuthenticator extends GuardAuthenticator
+class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
 {
     /**
      * {@inheritdoc}
@@ -42,6 +32,7 @@ class MemberAuthenticator extends GuardAuthenticator
         return [
             'username' => $request->getUser() ?: $request->request->get('username'),
             'password' => $request->getPassword() ?: $request->request->get('password'),
+            'entity'   => $request->attributes->get('_entity'),
         ];
     }
 
@@ -50,12 +41,12 @@ class MemberAuthenticator extends GuardAuthenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        return $userProvider->loadUserByUsername($credentials['username']);
+        return $userProvider->loadUserByUsername($credentials);
     }
 
     /**
      * {@inheritdoc}
-     * @var MemberInterface $user
+     * @var \HeimrichHannot\ApiBundle\Security\User\UserInterface $user
      */
     public function checkCredentials($credentials, UserInterface $user)
     {

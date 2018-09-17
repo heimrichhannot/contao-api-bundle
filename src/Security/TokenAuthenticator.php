@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ApiAuthenticator extends GuardAuthenticator
+class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
      * Called on every request. Return whatever credentials you want to
@@ -36,11 +36,11 @@ class ApiAuthenticator extends GuardAuthenticator
         $headerParts = explode(' ', $request->headers->get('Authorization'));
 
         if (!(count($headerParts) === 2 && $headerParts[0] === 'Bearer')) {
-            throw new AuthenticationException('huh.api.exception.auth.malformed_authorization_header');
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.malformed_authorization_header'));
         }
 
         if (!$request->query->get('key')) {
-            throw new AuthenticationException('huh.api.exception.auth.missing_api_key.');
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_api_key'));
         }
 
         return [
@@ -66,11 +66,12 @@ class ApiAuthenticator extends GuardAuthenticator
             throw new AuthenticationException('huh.api.exception.auth.invalid_jwt');
         }
 
-        // if a User object, checkCredentials() is called
-        return $userProvider->loadUserByUsername($payload->username);
+        // if a Member object, checkCredentials() is called
+        return $userProvider->loadUserByUsername(['username' => $payload->username, 'entity' => $payload->entity]);
     }
 
     /**
+     * @var \HeimrichHannot\ApiBundle\Security\User\UserInterface $user
      * @inheritDoc
      */
     public function checkCredentials($credentials, UserInterface $user)
@@ -82,7 +83,8 @@ class ApiAuthenticator extends GuardAuthenticator
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_api_key'));
         }
 
-        if (empty($user->getRoles()) || empty(array_intersect(StringUtil::deserialize($appModel->groups, true), $user->getRoles()))) {
+        if(false === $user->hasApiAccess($appModel))
+        {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.user_not_allowed_for_api', ['%key%' => $credentials['key']]));
         }
 
