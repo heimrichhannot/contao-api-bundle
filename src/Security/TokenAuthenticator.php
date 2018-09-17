@@ -9,15 +9,12 @@
 namespace HeimrichHannot\ApiBundle\Security;
 
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\StringUtil;
 use HeimrichHannot\ApiBundle\Exception\InvalidJWTException;
 use HeimrichHannot\ApiBundle\Model\ApiAppModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
@@ -50,6 +47,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
+     *
      * @inheritDoc
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -83,10 +81,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_api_key'));
         }
 
-        if(false === $user->hasApiAccess($appModel))
-        {
+        if (false === $user->hasApiAccess($appModel)) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.user_not_allowed_for_api', ['%key%' => $credentials['key']]));
         }
+
+        $user->setApi($appModel);
 
         // if user object is present here, JWT token did already match
         return true;

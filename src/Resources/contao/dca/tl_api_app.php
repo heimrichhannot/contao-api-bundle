@@ -72,21 +72,21 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
     'palettes'    => [
         '__selector__' => ['type', 'published'],
         'default'      => '{general_legend},title,type',
-        'resource'     => '{general_legend},title,type,author;{resource_legend},resource;{security_legend},key,groups,mGroups;{publish_legend},published',
+        'resource'     => '{general_legend},title,type,author;{resource_legend},resource,resourceActions;{security_legend},key,groups,mGroups;{publish_legend},published',
     ],
     'subpalettes' => [
         'published' => 'start,stop',
     ],
     'fields'      => [
-        'id'        => [
+        'id'              => [
             'sql' => "int(10) unsigned NOT NULL auto_increment",
         ],
-        'tstamp'    => [
+        'tstamp'          => [
             'label' => &$GLOBALS['TL_LANG']['tl_api_app']['tstamp'],
             'eval'  => ['rgxp' => 'datim'],
             'sql'   => "varchar(64) NOT NULL default ''",
         ],
-        'dateAdded' => [
+        'dateAdded'       => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['dateAdded'],
             'sorting'   => true,
             'flag'      => 7,
@@ -94,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'timepicker' => true, 'doNotCopy' => true, 'mandatory' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
-        'type'      => [
+        'type'            => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['type'],
             'flag'      => 1,
             'exclude'   => true,
@@ -105,7 +105,16 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50 chosen', 'submitOnChange' => true],
             'sql'       => "varchar(32) NOT NULL default ''",
         ],
-        'resource'  => [
+        'title'           => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['title'],
+            'flag'      => 1,
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 255, 'tl_class' => 'w50'],
+            'sql'       => "varchar(255) NOT NULL default ''",
+        ],
+        'resource'        => [
             'label'            => &$GLOBALS['TL_LANG']['tl_api_app']['resource'],
             'flag'             => 1,
             'exclude'          => true,
@@ -116,16 +125,18 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'             => ['maxlength' => 32, 'tl_class' => 'w50 chosen', 'submitOnChange' => true],
             'sql'              => "varchar(32) NOT NULL default ''",
         ],
-        'title'     => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['title'],
+        'resourceActions' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['resourceActions'],
             'flag'      => 1,
             'exclude'   => true,
-            'search'    => true,
-            'inputType' => 'text',
-            'eval'      => ['maxlength' => 255, 'tl_class' => 'w50'],
-            'sql'       => "varchar(255) NOT NULL default ''",
+            'filter'    => true,
+            'inputType' => 'checkbox',
+            'options'   => ['api_resource_create', 'api_resource_update', 'api_resource_list', 'api_resource_show', 'api_resource_delete'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_api_app']['reference']['resourceActions'],
+            'sql'       => "blob NULL",
+            'eval'      => ['multiple' => true],
         ],
-        'mGroups'   => [
+        'mGroups'         => [
             'label'      => &$GLOBALS['TL_LANG']['tl_api_app']['mGroups'],
             'exclude'    => true,
             'inputType'  => 'checkbox',
@@ -134,7 +145,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'sql'        => "blob NULL",
             'relation'   => ['type' => 'hasMany', 'load' => 'lazy'],
         ],
-        'groups'    => [
+        'groups'          => [
             'label'      => &$GLOBALS['TL_LANG']['tl_api_app']['groups'],
             'exclude'    => true,
             'inputType'  => 'checkbox',
@@ -143,7 +154,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'sql'        => "blob NULL",
             'relation'   => ['type' => 'hasMany', 'load' => 'lazy'],
         ],
-        'key'       => [
+        'key'             => [
             'label'         => &$GLOBALS['TL_LANG']['tl_api_app']['key'],
             'search'        => true,
             'inputType'     => 'text',
@@ -151,7 +162,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'          => ['tl_class' => 'clr long', 'unique' => true],
             'sql'           => "varchar(255) NOT NULL default ''",
         ],
-        'published' => [
+        'published'       => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['published'],
             'exclude'   => true,
             'filter'    => true,
@@ -159,14 +170,14 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'      => ['doNotCopy' => true, 'submitOnChange' => true, 'tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'start'     => [
+        'start'           => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['start'],
             'exclude'   => true,
             'inputType' => 'text',
             'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'],
             'sql'       => "varchar(10) NOT NULL default ''",
         ],
-        'stop'      => [
+        'stop'            => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['stop'],
             'exclude'   => true,
             'inputType' => 'text',

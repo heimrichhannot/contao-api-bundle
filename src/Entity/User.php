@@ -27,6 +27,11 @@ class User implements UserInterface
      */
     protected $framework;
 
+    /**
+     * @var ApiAppModel
+     */
+    protected $_apiAppModel;
+
 
     /**
      * Table name
@@ -252,8 +257,7 @@ class User implements UserInterface
 
         $groups = StringUtil::deserialize($model->groups, true);
 
-        if(empty($groups))
-        {
+        if (empty($groups)) {
             return false;
         }
 
@@ -264,5 +268,19 @@ class User implements UserInterface
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setApi(ApiAppModel $model)
+    {
+        $this->_apiAppModel = $model;
+    }
 
+    /**
+     * @inheritDoc
+     */
+    public function getApi(): ApiAppModel
+    {
+        return $this->_apiAppModel;
+    }
 }

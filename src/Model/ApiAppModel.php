@@ -19,10 +19,14 @@ use Contao\System;
  *
  * @property int    $id
  * @property int    $tstamp
+ * @property string $type
+ * @property string $resource
+ * @property array  $resourceActions
  * @property int    $dateAdded
  * @property string $title
  * @property string $key
  * @property array  $groups
+ * @property array  $mGroups
  * @property bool   $published
  * @property string $start
  * @property string $stop

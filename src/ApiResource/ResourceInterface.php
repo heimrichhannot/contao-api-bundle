@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\ApiBundle\ApiResource;
 
-
 use HeimrichHannot\ApiBundle\Security\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 

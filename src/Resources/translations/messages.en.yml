@@ -16,3 +16,10 @@ huh.api.exception.auth.invalid_jwt: Invalid JWT
 huh.api.exception.auth.user_not_allowed_for_api: 'Given user has no access to API with key %key%'
 huh.api.exception.auth.missing_entity_class: 'User entity for parameter %entity% does not exist'
 huh.api.exception.auth.missing_entity_attribute: 'User entity parameter attribute is missing'
+huh.api.exception.resource_not_exists: 'Resource with alias: %alias% does not exist'
+huh.api.exception.resource_action_not_allowed: 'No access to resource %resource% and action %action%'
+
+# resource messages
+huh.api.message.resource.delete_success: 'Successfully deleted resource %resource% with resource_id: %id%'
+huh.api.message.resource.delete_error: 'Error while trying to delete resource %resource% with resource_id: %id%'
+huh.api.message.resource.not_exists: 'Resource %resource% with resource_id: %id% does not exist'

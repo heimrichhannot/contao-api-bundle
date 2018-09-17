@@ -9,11 +9,19 @@
 namespace HeimrichHannot\ApiBundle\ApiResource;
 
 
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
+use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\MemberModel;
 use HeimrichHannot\ApiBundle\Security\User\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
-class MemberResource implements ResourceInterface
+class MemberResource implements ResourceInterface, FrameworkAwareInterface, ContainerAwareInterface
 {
+    use FrameworkAwareTrait;
+    use ContainerAwareTrait;
+
     /**
      * @inheritDoc
      */
@@ -43,7 +51,20 @@ class MemberResource implements ResourceInterface
      */
     public function show($id, Request $request, UserInterface $user): ?array
     {
-        return null;
+        $id = (int)$id;
+
+        /** @var MemberModel $model */
+        $adapter = $this->framework->createInstance(MemberModel::class);
+
+        if (null === ($model = $adapter->findByPk($id))) {
+            return [
+                'message' => $this->container->get('translator')->trans('huh.api.message.resource.not_exists', ['%resource%' => 'member', '%id%' => $id]),
+            ];
+        }
+
+        return [
+            $model->row(),
+        ];
     }
 
     /**
@@ -51,7 +72,26 @@ class MemberResource implements ResourceInterface
      */
     public function delete($id, Request $request, UserInterface $user): ?array
     {
-        return null;
+        $id = (int)$id;
+
+        /** @var MemberModel $model */
+        $adapter = $this->framework->createInstance(MemberModel::class);
+
+        if (null === ($model = $adapter->findByPk($id))) {
+            return [
+                'message' => $this->container->get('translator')->trans('huh.api.message.resource.not_exists', ['%resource%' => 'member', '%id%' => $id]),
+            ];
+        }
+
+        if ($model->delete() > 0) {
+            return [
+                'message' => $this->container->get('translator')->trans('huh.api.message.resource.delete_success', ['%resource%' => 'member', '%id%' => $id]),
+            ];
+        }
+
+        return [
+            'message' => $this->container->get('translator')->trans('huh.api.message.resource.delete_error', ['%resource%' => 'member', '%id%' => $id]),
+        ];
     }
 
 }

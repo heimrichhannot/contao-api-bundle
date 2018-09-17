@@ -98,4 +98,20 @@ interface UserInterface extends AdvancedUserInterface
      * @return bool
      */
     public function hasApiAccess(ApiAppModel $model): bool;
+
+    /**
+     * Set active api model
+     *
+     * @param ApiAppModel $model
+     *
+     * @return mixed
+     */
+    public function setApi(ApiAppModel $model);
+
+    /**
+     * Get active api model
+     *
+     * @return ApiAppModel
+     */
+    public function getApi(): ApiAppModel;
 }

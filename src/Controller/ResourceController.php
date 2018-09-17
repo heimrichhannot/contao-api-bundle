@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ApiBundle\Controller;
 
 
+use Contao\StringUtil;
 use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
 use HeimrichHannot\ApiBundle\Exception\ResourceNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,7 +34,11 @@ class ResourceController extends Controller
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            throw new ResourceNotFoundException('huh.api.exception.resource_not_found');
+            throw new ResourceNotFoundException($this->container->get('translator')->trans('huh.api.exception.resource_not_exists', ['%alias' => $alias]));
+        }
+
+        if (false === $this->isActionAllowed($request)) {
+            throw new ResourceNotFoundException($this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')]));
         }
 
         return new JsonResponse($resource->create($request, $this->getUser()));
@@ -51,7 +56,11 @@ class ResourceController extends Controller
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            throw new ResourceNotFoundException('huh.api.exception.resource_not_found');
+            throw new ResourceNotFoundException('huh.api.exception.resource_not_exists');
+        }
+
+        if (false === $this->isActionAllowed($request)) {
+            throw new ResourceNotFoundException($this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')]));
         }
 
         return new JsonResponse($resource->update($id, $request, $this->getUser()));
@@ -68,7 +77,11 @@ class ResourceController extends Controller
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            throw new ResourceNotFoundException('huh.api.exception.resource_not_found');
+            throw new ResourceNotFoundException('huh.api.exception.resource_not_exists');
+        }
+
+        if (false === $this->isActionAllowed($request)) {
+            throw new ResourceNotFoundException($this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')]));
         }
 
         return new JsonResponse($resource->list($request, $this->getUser()));
@@ -86,7 +99,11 @@ class ResourceController extends Controller
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            throw new ResourceNotFoundException('huh.api.exception.resource_not_found');
+            throw new ResourceNotFoundException('huh.api.exception.resource_not_exists');
+        }
+
+        if (false === $this->isActionAllowed($request)) {
+            throw new ResourceNotFoundException($this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')]));
         }
 
         return new JsonResponse($resource->show($id, $request, $this->getUser()));
@@ -104,9 +121,40 @@ class ResourceController extends Controller
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            throw new ResourceNotFoundException('huh.api.exception.resource_not_found');
+            throw new ResourceNotFoundException('huh.api.exception.resource_not_exists');
+        }
+
+        if (false === $this->isActionAllowed($request)) {
+            throw new ResourceNotFoundException($this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')]));
         }
 
         return new JsonResponse($resource->delete($id, $request, $this->getUser()));
+    }
+
+
+    /**
+     * Determine if action is allowed
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    protected function isActionAllowed(Request $request): bool
+    {
+        if (null === ($api = $this->getUser()->getApi())) {
+            return false;
+        }
+
+        $allowed = StringUtil::deserialize($this->getUser()->getApi()->resourceActions, true);
+
+        if (empty($allowed)) {
+            return false;
+        }
+
+        if (!in_array($request->attributes->get('_route'), $allowed)) {
+            return false;
+        }
+
+        return true;
     }
 }
