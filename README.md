@@ -42,10 +42,10 @@ To add your custom resource, simply add an service within your bundles or app `s
 
 ```
 services:
-	  my.api.resource.my_resource:
-        class: MyApi\Resource\MyResource
-        tags:
-        - { name: huh.api.resource, alias: my_resource}
+	my.api.resource.my_resource:
+		class: MyApi\Resource\MyResource
+		tags:
+		- { name: huh.api.resource, alias: my_resource}
 ```
 
 Now you are able to access your resource through `/api/resource/my_resource`.
