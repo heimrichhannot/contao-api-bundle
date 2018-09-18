@@ -4,7 +4,7 @@ huh.api.exception.auth.post_method_only: Anmeldung nur per POST-Anfrage möglich
 huh.api.exception.auth.refresh_not_possible: Nutzer kann nicht aktualisiert werden.
 huh.api.exception.auth.invalid_username: Ungültiger Nutzername
 huh.api.exception.auth.user_not_found: 'Benutzer mit dem Namen %username% wurde nicht gefunden'
-huh.api.exception.auth.user_not_exists: 'Benutzer mit dem Namen %username% existiert nicht'
+huh.api.exception.auth.user_not_existing: 'Benutzer mit dem Namen %username% existiert nicht'
 huh.api.exception.auth.invalid_token: Ungültiger Token
 huh.api.exception.auth.token_expired: Token abgelaufen
 huh.api.exception.auth.missing_authorization_header: Fehlender Autorisierungs-Header
@@ -16,10 +16,10 @@ huh.api.exception.auth.invalid_jwt: Ungültiger JWT-Token
 huh.api.exception.auth.user_not_allowed_for_api: 'Der Nutzer hat keinen Zugriff auf die API mit dem Schlüssel %key%'
 huh.api.exception.auth.missing_entity_class: 'Nutzer-Entität für den Parameter %entity% existiert nicht'
 huh.api.exception.auth.missing_entity_attribute: 'Parameter zur Selektierung der Nutzer-Entität fehlt'
-huh.api.exception.resource_not_exists: 'Resource mit dem Alias: %alias% existiert nicht'
+huh.api.exception.resource_not_existing: 'Resource mit dem Alias: %alias% existiert nicht'
 huh.api.exception.resource_action_not_allowed: 'Kein Zugriff auf die Resource %resource% mit der Aktion: %action%'
 
 # resource messages
 huh.api.message.resource.delete_success: 'Resource %resource% mit der resource_id: %id% wurde erfolgreich gelöscht'
 huh.api.message.resource.delete_error: 'Fehler beim Löschen der Resource %resource% mit der resource_id: %id%'
-huh.api.message.resource.not_exists: 'Resource %resource% mit der resource_id: %id% existiert nicht'
+huh.api.message.resource.not_existing: 'Resource %resource% mit der resource_id: %id% existiert nicht'
