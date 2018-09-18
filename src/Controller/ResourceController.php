@@ -141,11 +141,11 @@ class ResourceController extends Controller
      */
     protected function isActionAllowed(Request $request): bool
     {
-        if (null === ($api = $this->getUser()->getApi())) {
+        if (null === ($api = $this->getUser()->getApp())) {
             return false;
         }
 
-        $allowed = StringUtil::deserialize($this->getUser()->getApi()->resourceActions, true);
+        $allowed = StringUtil::deserialize($this->getUser()->getApp()->resourceActions, true);
 
         if (empty($allowed)) {
             return false;
