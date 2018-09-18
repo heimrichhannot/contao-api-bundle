@@ -32,11 +32,11 @@ curl --user username:password -H "Content-Type: application/json" -X POST http:/
 
 ## Create an app with an custom api key 
 
-Visit your contao back end at `http://domain.tld/contao?do=api_apps` and create your first app. 
+Visit your contao backend at `http://domain.tld/contao?do=api_apps` and create your first app.
 Access can be restricted for member or user groups. Admin users `tl_user` will have access to every api by default.
 For each request beside the login routes you must provide the generated API `key` as `GET` Parameter.
 
-## Resource `/api/resource/{resource_alias} 
+## Resource /api/resource/{resource_alias}
 
 To add your custom resource, simply add an service within your bundles or app `services.yml`:
 
@@ -55,7 +55,7 @@ Now you are able to access your resource through `/api/resource/my_resource`.
 curl --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmXtZSI6ImRpZ2l0YWxlc0BoZWltcmljaA1oYW5ub3QuZGUiLCJpYXQiOjE1MzY4NTYwMDMsImV4cCI6MTUzNjk0MjQwM30.trp-1NgYgXGfHYdE3dlQ8awE8aXUWL-RfBQyfWm2Hz0" -H "Content-Type: application/json" -X GET http://domain.tld/api/resource/my_resource?key=8cf414914922f51f55ee980e3807e298
 ```
 
-Now you are able to access crud functionality by using the related `HTTP-method`:
+Now you are able to access crud functionality by using the related `HTTP method`:
 
 |   | HTTP-Method | Resource-Method (Mapping) |
 |---|---|---|
