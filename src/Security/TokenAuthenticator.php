@@ -81,11 +81,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_api_key'));
         }
 
-        if (false === $user->hasApiAccess($appModel)) {
+        if (false === $user->hasAppAccess($appModel)) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.user_not_allowed_for_api', ['%key%' => $credentials['key']]));
         }
 
-        $user->setApi($appModel);
+        $user->setApp($appModel);
 
         // if user object is present here, JWT token did already match
         return true;

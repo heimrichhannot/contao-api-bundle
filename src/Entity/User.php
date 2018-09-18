@@ -244,7 +244,7 @@ class User implements UserInterface
     /**
      * @inheritDoc
      */
-    public function hasApiAccess(ApiAppModel $model): bool
+    public function hasAppAccess(ApiAppModel $model): bool
     {
         // allow access to administrators
         if (true === (bool)$this->_model->admin) {
@@ -271,7 +271,7 @@ class User implements UserInterface
     /**
      * @inheritDoc
      */
-    public function setApi(ApiAppModel $model)
+    public function setApp(ApiAppModel $model)
     {
         $this->_apiAppModel = $model;
     }
@@ -279,7 +279,7 @@ class User implements UserInterface
     /**
      * @inheritDoc
      */
-    public function getApi(): ApiAppModel
+    public function getApp(): ApiAppModel
     {
         return $this->_apiAppModel;
     }

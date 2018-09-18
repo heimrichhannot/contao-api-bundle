@@ -97,7 +97,7 @@ interface UserInterface extends AdvancedUserInterface
      *
      * @return bool
      */
-    public function hasApiAccess(ApiAppModel $model): bool;
+    public function hasAppAccess(ApiAppModel $model): bool;
 
     /**
      * Set active api model
@@ -106,12 +106,12 @@ interface UserInterface extends AdvancedUserInterface
      *
      * @return mixed
      */
-    public function setApi(ApiAppModel $model);
+    public function setApp(ApiAppModel $model);
 
     /**
      * Get active api model
      *
      * @return ApiAppModel
      */
-    public function getApi(): ApiAppModel;
+    public function getApp(): ApiAppModel;
 }
