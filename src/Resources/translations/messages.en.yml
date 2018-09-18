@@ -4,7 +4,7 @@ huh.api.exception.auth.post_method_only: Authentication only allowed by POST HTT
 huh.api.exception.auth.refresh_not_possible: Cannot refresh a Contao user.
 huh.api.exception.auth.invalid_username: Invalid username
 huh.api.exception.auth.user_not_found: 'Could not find user with name %username%'
-huh.api.exception.auth.user_not_exists: 'Member with name %username% does not exist'
+huh.api.exception.auth.user_not_existing: 'Member with name %username% does not exist'
 huh.api.exception.auth.invalid_token: Invalid token
 huh.api.exception.auth.token_expired: Token expired
 huh.api.exception.auth.missing_authorization_header: Missing Authorization Header
@@ -16,10 +16,10 @@ huh.api.exception.auth.invalid_jwt: Invalid JWT
 huh.api.exception.auth.user_not_allowed_for_api: 'Given user has no access to API with key %key%'
 huh.api.exception.auth.missing_entity_class: 'User entity for parameter %entity% does not exist'
 huh.api.exception.auth.missing_entity_attribute: 'User entity parameter attribute is missing'
-huh.api.exception.resource_not_exists: 'Resource with alias: %alias% does not exist'
+huh.api.exception.resource_not_existing: 'Resource with alias: %alias% does not exist'
 huh.api.exception.resource_action_not_allowed: 'No access to resource %resource% and action %action%'
 
 # resource messages
 huh.api.message.resource.delete_success: 'Successfully deleted resource %resource% with resource_id: %id%'
 huh.api.message.resource.delete_error: 'Error while trying to delete resource %resource% with resource_id: %id%'
-huh.api.message.resource.not_exists: 'Resource %resource% with resource_id: %id% does not exist'
+huh.api.message.resource.not_existing: 'Resource %resource% with resource_id: %id% does not exist'

@@ -84,7 +84,7 @@ abstract class AbstractUserProvider implements ContainerAwareInterface, UserProv
                 throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_found', ['%username%' => $username]));
             }
 
-            throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_exists', ['%username%' => $username]));
+            throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_existing', ['%username%' => $username]));
         }
 
         return $this->setUserFromModel($model);

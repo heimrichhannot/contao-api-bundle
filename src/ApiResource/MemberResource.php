@@ -58,7 +58,7 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
 
         if (null === ($model = $adapter->findByPk($id))) {
             return [
-                'message' => $this->container->get('translator')->trans('huh.api.message.resource.not_exists', ['%resource%' => 'member', '%id%' => $id]),
+                'message' => $this->container->get('translator')->trans('huh.api.message.resource.not_existing', ['%resource%' => 'member', '%id%' => $id]),
             ];
         }
 
@@ -79,7 +79,7 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
 
         if (null === ($model = $adapter->findByPk($id))) {
             return [
-                'message' => $this->container->get('translator')->trans('huh.api.message.resource.not_exists', ['%resource%' => 'member', '%id%' => $id]),
+                'message' => $this->container->get('translator')->trans('huh.api.message.resource.not_existing', ['%resource%' => 'member', '%id%' => $id]),
             ];
         }
 
