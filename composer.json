@@ -10,8 +10,7 @@
         "heimrichhannot/contao-categories-bundle": "^1.0",
         "twig/extensions": "^1.5",
         "urodoz/truncate-html": "^1.0",
-        "firebase/php-jwt": "^4.0",
-        "sensio/framework-extra-bundle": "^5.2"
+        "firebase/php-jwt": "^4.0"
     },
     "require-dev": {
         "contao/test-case": "^1.1",
