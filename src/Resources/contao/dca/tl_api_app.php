@@ -72,7 +72,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
     'palettes'    => [
         '__selector__' => ['type', 'published'],
         'default'      => '{general_legend},title,type',
-        'resource'     => '{general_legend},title,type,author;{resource_legend},resource,resourceActions;{security_legend},key,groups,mGroups;{publish_legend},published',
+        'resource'     => '{general_legend},title,type,author;{resource_legend},resource,resourceActions,categories;{security_legend},key,groups,mGroups;{publish_legend},published',
     ],
     'subpalettes' => [
         'published' => 'start,stop',
@@ -186,3 +186,12 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
         ],
     ],
 ];
+
+\HeimrichHannot\CategoriesBundle\Backend\Category::addMultipleCategoriesFieldToDca(
+    'tl_api_app', 'categories',
+    [
+        'addPrimaryCategory'   => false,
+        'forcePrimaryCategory' => false,
+        'mandatory' => false
+    ]
+);
