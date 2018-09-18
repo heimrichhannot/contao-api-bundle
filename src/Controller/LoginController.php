@@ -1,13 +1,12 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Controller;
-
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +28,7 @@ class LoginController extends Controller
     {
         $token = $this->get('huh.api.jwt_coder')->encode(
             [
-                'entity'   => 'huh.api.entity.member',
+                'entity' => 'huh.api.entity.member',
                 'username' => $this->getUser()->getUsername(),
             ]
         );
@@ -46,12 +45,11 @@ class LoginController extends Controller
     {
         $token = $this->get('huh.api.jwt_coder')->encode(
             [
-                'entity'   => 'huh.api.entity.user',
+                'entity' => 'huh.api.entity.user',
                 'username' => $this->getUser()->getUsername(),
             ]
         );
 
         return new JsonResponse(['token' => $token]);
     }
-
 }

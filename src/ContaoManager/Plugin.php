@@ -1,13 +1,10 @@
 <?php
-/**
- * Contao Open Source CMS
- *
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Thomas Körner <t.koerner@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
-
 
 namespace HeimrichHannot\ApiBundle\ContaoManager;
 
@@ -20,15 +17,11 @@ use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use HeimrichHannot\ApiBundle\ContaoApiBundle;
-use HeimrichHannot\ApiBundle\Entity\Member;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-
 class Plugin implements BundlePluginInterface, RoutingPluginInterface, ExtensionPluginInterface
 {
-
     /**
      * Gets a list of autoload configurations for this bundle.
      *
@@ -42,14 +35,13 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
             BundleConfig::create(ContaoApiBundle::class)->setLoadAfter(
                 [
                     ContaoCoreBundle::class,
-                    'privacy',
                 ]
             ),
         ];
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
@@ -59,12 +51,11 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
         if ('security' === $extensionName) {
-
             $extensionConfigs = $this->getSecurityExtensionConfig($extensionConfigs, $container);
 
             return $extensionConfigs;
@@ -74,7 +65,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
     }
 
     /**
-     * Get security extension config
+     * Get security extension config.
      *
      * @param array            $extensionConfigs
      * @param ContainerBuilder $container
@@ -86,27 +77,27 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
         $firewalls = [
             'api_login_member' => [
                 'request_matcher' => 'huh.api.routing.login.member.matcher',
-                'stateless'       => true,
-                'guard'           => [
+                'stateless' => true,
+                'guard' => [
                     'authenticators' => ['huh.api.security.username_password_authenticator'],
                 ],
-                'provider'        => 'huh.api.security.user_provider',
+                'provider' => 'huh.api.security.user_provider',
             ],
             'api_login_user' => [
                 'request_matcher' => 'huh.api.routing.login.user.matcher',
-                'stateless'       => true,
-                'guard'           => [
+                'stateless' => true,
+                'guard' => [
                     'authenticators' => ['huh.api.security.username_password_authenticator'],
                 ],
-                'provider'        => 'huh.api.security.user_provider',
+                'provider' => 'huh.api.security.user_provider',
             ],
-            'api'       => [
+            'api' => [
                 'request_matcher' => 'huh.api.routing.matcher',
-                'stateless'       => true,
-                'guard'           => [
+                'stateless' => true,
+                'guard' => [
                     'authenticators' => ['huh.api.security.token_authenticator'],
                 ],
-                'provider'        => 'huh.api.security.user_provider',
+                'provider' => 'huh.api.security.user_provider',
             ],
         ];
 
@@ -117,8 +108,8 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
         ];
 
         foreach ($extensionConfigs as &$extensionConfig) {
-            $extensionConfig['firewalls'] = (isset($extensionConfig['firewalls']) && is_array($extensionConfig['firewalls']) ? $extensionConfig['firewalls'] : []) + $firewalls;
-            $extensionConfig['providers'] = (isset($extensionConfig['providers']) && is_array($extensionConfig['providers']) ? $extensionConfig['providers'] : []) + $providers;
+            $extensionConfig['firewalls'] = (isset($extensionConfig['firewalls']) && \is_array($extensionConfig['firewalls']) ? $extensionConfig['firewalls'] : []) + $firewalls;
+            $extensionConfig['providers'] = (isset($extensionConfig['providers']) && \is_array($extensionConfig['providers']) ? $extensionConfig['providers'] : []) + $providers;
         }
 
         return $extensionConfigs;

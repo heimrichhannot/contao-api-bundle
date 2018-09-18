@@ -1,16 +1,15 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Security\User;
 
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\MemberModel;
 use Contao\Model;
 use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -26,6 +25,11 @@ abstract class AbstractUserProvider implements ContainerAwareInterface, UserProv
     use ContainerAwareTrait;
 
     /**
+     * @var string
+     */
+    protected $modelClass;
+
+    /**
      * @var ContaoFrameworkInterface
      */
     private $framework;
@@ -36,18 +40,13 @@ abstract class AbstractUserProvider implements ContainerAwareInterface, UserProv
     private $translator;
 
     /**
-     * @var string
-     */
-    protected $modelClass;
-
-    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework, TranslatorInterface $translator)
     {
-        $this->framework  = $framework;
+        $this->framework = $framework;
         $this->translator = $translator;
     }
 
@@ -64,7 +63,6 @@ abstract class AbstractUserProvider implements ContainerAwareInterface, UserProv
         /** @var Model $model */
         $model = $this->framework->createInstance($this->getModelClass());
         if (null === ($model = $model->findBy('username', $username))) {
-
             $loaded = false;
 
             // HOOK: pass credentials to callback functions
@@ -73,7 +71,7 @@ abstract class AbstractUserProvider implements ContainerAwareInterface, UserProv
                     $loaded = Controller::importStatic($callback[0], 'import', true)->{$callback[1]}($username, System::getContainer()->get('request_stack')->getCurrentRequest()->getPassword() ?: System::getContainer()->get('request_stack')->getCurrentRequest()->request->get('password'), 'tl_member');
 
                     // Load successfull
-                    if ($loaded === true) {
+                    if (true === $loaded) {
                         break;
                     }
                 }
@@ -91,7 +89,7 @@ abstract class AbstractUserProvider implements ContainerAwareInterface, UserProv
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function refreshUser(UserInterface $user)
     {
@@ -99,14 +97,14 @@ abstract class AbstractUserProvider implements ContainerAwareInterface, UserProv
     }
 
     /**
-     * Get current contao model class
+     * Get current contao model class.
      *
      * @return string
      */
     abstract protected function setModelClass(): string;
 
     /**
-     * Set user from contao model
+     * Set user from contao model.
      *
      * @param Model $model
      *

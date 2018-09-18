@@ -1,42 +1,46 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\DependencyInjection\Compiler;
 
-use HeimrichHannot\ApiBundle\Manager\ApiResourceManager;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Reference;
 
 class ApiResourcePass implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     *
+     * @throws ServiceNotFoundException
+     */
     public function process(ContainerBuilder $container)
     {
-        // always first check if the primary service is defined
-        if (!$container->has('huh.api.manager.resource')) {
-            return;
-        }
-
         $definition = $container->findDefinition('huh.api.manager.resource');
 
         // find all service IDs with the huh.api.resource tag
         $taggedServices = $container->findTaggedServiceIds('huh.api.resource');
 
         foreach ($taggedServices as $id => $tags) {
-
             // a service could have the same tag twice
             foreach ($tags as $attributes) {
+                if (!isset($attributes['alias'])) {
+                    throw new InvalidArgumentException(sprintf('Missing tag information "alias" on huh.api.resource tagged service "%s".', $id));
+                }
+
                 $definition->addMethodCall(
                     'add',
                     [
                         new Reference($id),
-                        $attributes["alias"],
-                        $id
+                        $attributes['alias'],
+                        $id,
                     ]
                 );
             }

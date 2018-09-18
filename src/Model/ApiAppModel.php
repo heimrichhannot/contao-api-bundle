@@ -1,21 +1,19 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Model;
-
 
 use Contao\Model;
 use Contao\System;
 
 /**
- * Class ApiAppModel
+ * Class ApiAppModel.
  *
- * @package HeimrichHannot\ApiBundle\Model
  *
  * @property int    $id
  * @property int    $tstamp
@@ -36,7 +34,7 @@ class ApiAppModel extends Model
     protected static $strTable = 'tl_api_app';
 
     /**
-     * Find published app by key
+     * Find published app by key.
      *
      * @param string $key
      * @param array  $options
@@ -45,10 +43,10 @@ class ApiAppModel extends Model
      */
     public function findPublishedByKey(string $key, array $options = [])
     {
-        $t          = static::$strTable;
+        $t = static::$strTable;
         $arrColumns = ["$t.key=?"];
 
-        $time         = \Date::floorToMinute();
+        $time = \Date::floorToMinute();
         $arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'".($time + 60)."') AND $t.published='1'";
 
         /** @var Model $adapter */

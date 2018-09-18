@@ -1,13 +1,12 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Security;
-
 
 use Contao\Config;
 use Contao\System;
@@ -32,7 +31,7 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         return [
             'username' => $request->getUser() ?: $request->request->get('username'),
             'password' => $request->getPassword() ?: $request->request->get('password'),
-            'entity'   => $request->attributes->get('_entity'),
+            'entity' => $request->attributes->get('_entity'),
         ];
     }
 
@@ -46,13 +45,14 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * {@inheritdoc}
-     * @var \HeimrichHannot\ApiBundle\Security\User\UserInterface $user
+     *
+     * @var \HeimrichHannot\ApiBundle\Security\User\UserInterface
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        $time          = time();
+        $time = time();
         $authenticated = password_verify($credentials['password'], $user->getPassword());
-        $needsRehash   = password_needs_rehash($user->getPassword(), PASSWORD_DEFAULT);
+        $needsRehash = password_needs_rehash($user->getPassword(), PASSWORD_DEFAULT);
 
         // Re-hash the password if the algorithm has changed
         if ($authenticated && $needsRehash) {
@@ -60,12 +60,12 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         }
 
         // HOOK: pass credentials to callback functions
-        if (!$authenticated && isset($GLOBALS['TL_HOOKS']['checkCredentials']) && is_array($GLOBALS['TL_HOOKS']['checkCredentials'])) {
+        if (!$authenticated && isset($GLOBALS['TL_HOOKS']['checkCredentials']) && \is_array($GLOBALS['TL_HOOKS']['checkCredentials'])) {
             foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback) {
                 $authenticated = System::importStatic($callback[0], 'auth', true)->{$callback[1]}($credentials['username'], $credentials['password'], $user);
 
                 // Authentication successfull
-                if ($authenticated === true) {
+                if (true === $authenticated) {
                     break;
                 }
             }
@@ -74,6 +74,7 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         if (!$authenticated) {
             $user->setLoginCount($user->getLoginCount() - 1);
             $user->getModel()->save();
+
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_credentials'));
         }
 
@@ -85,4 +86,15 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(Request $request)
+    {
+        if (\in_array($request->attributes->get('_scope'), ['api_login_user', 'api_login_member'])) {
+            return true;
+        }
+
+        return false;
+    }
 }

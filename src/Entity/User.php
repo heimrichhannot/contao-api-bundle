@@ -1,14 +1,16 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Entity;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Date;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\UserModel;
@@ -32,9 +34,8 @@ class User implements UserInterface
      */
     protected $_apiAppModel;
 
-
     /**
-     * Table name
+     * Table name.
      *
      * @var string
      */
@@ -46,7 +47,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getRoles()
     {
@@ -54,7 +55,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getPassword()
     {
@@ -62,15 +63,15 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getUsername()
     {
@@ -78,21 +79,24 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isAccountNonExpired()
     {
         $time = time();
 
-        // Check whether account is not active yet or anymore
-        if ($this->_model->start != '' || $this->_model->stop != '') {
-            $time = \Date::floorToMinute($time);
+        /** @var Date $dateAdapter */
+        $dateAdapter = $this->framework->getAdapter(Date::class);
 
-            if ($this->_model->start != '' && $this->_model->start > $time) {
+        // Check whether account is not active yet or anymore
+        if ('' != $this->_model->start || '' != $this->_model->stop) {
+            $time = $dateAdapter->floorToMinute($time);
+
+            if ('' != $this->_model->start && $this->_model->start > $time) {
                 return false;
             }
 
-            if ($this->_model->stop != '' && $this->_model->stop <= ($time + 60)) {
+            if ('' != $this->_model->stop && $this->_model->stop <= ($time + 60)) {
                 return false;
             }
         }
@@ -101,41 +105,25 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isAccountNonLocked()
     {
         $time = time();
 
+        /** @var Config $configAdapter */
+        $configAdapter = $this->framework->getAdapter(Config::class);
+
         // Check whether the account is locked
-        if (($this->_model->locked + \Config::get('lockPeriod')) > $time) {
+        if (($this->_model->locked + $configAdapter->get('lockPeriod')) > $time) {
             return false;
-        }
-
-        // Check whether the account is disabled
-        if ($this->_model->disable) {
-
-            return false;
-        }
-
-        // Check whether account is not active yet or anymore
-        if ($this->_model->start != '' || $this->_model->stop != '') {
-            $time = \Date::floorToMinute($time);
-
-            if ($this->_model->start != '' && $this->_model->start > $time) {
-                return false;
-            }
-
-            if ($this->_model->stop != '' && $this->_model->stop <= ($time + 60)) {
-                return false;
-            }
         }
 
         return true;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isCredentialsNonExpired()
     {
@@ -143,23 +131,22 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isEnabled()
     {
-        return false === (bool)$this->_model->disable;
+        return false === (bool) $this->_model->disable;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setModel(Model $model)
     {
@@ -167,7 +154,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getModel(): Model
     {
@@ -175,7 +162,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setLoginCount(int $loginCount)
     {
@@ -183,7 +170,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getLoginCount(): int
     {
@@ -191,7 +178,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setLastLogin(int $lastLogin)
     {
@@ -199,7 +186,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getLastLogin(): int
     {
@@ -207,7 +194,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setCurrentLogin(int $currentLogin)
     {
@@ -215,7 +202,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getCurrentLogin(): int
     {
@@ -223,7 +210,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function findBy($key, $value): ?UserInterface
     {
@@ -234,7 +221,7 @@ class User implements UserInterface
         }
 
         /** @var UserModel $model */
-        $model = $this->framework->createInstance($class);
+        $model = $this->framework->getAdapter($class);
 
         $this->_model = $model->findBy($key, $value);
 
@@ -242,12 +229,12 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function hasApiAccess(ApiAppModel $model): bool
+    public function hasAppAccess(ApiAppModel $model): bool
     {
         // allow access to administrators
-        if (true === (bool)$this->_model->admin) {
+        if (true === (bool) $this->_model->admin) {
             return true;
         }
 
@@ -269,17 +256,17 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function setApi(ApiAppModel $model)
+    public function setApp(ApiAppModel $model)
     {
-        $this->_apiAppModel = $model;
+        $this->_apiAppModel = $model->current();
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function getApi(): ApiAppModel
+    public function getApp(): ApiAppModel
     {
         return $this->_apiAppModel;
     }

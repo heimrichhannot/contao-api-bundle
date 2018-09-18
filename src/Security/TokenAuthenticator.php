@@ -1,13 +1,12 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Security;
-
 
 use HeimrichHannot\ApiBundle\Exception\InvalidJWTException;
 use HeimrichHannot\ApiBundle\Model\ApiAppModel;
@@ -32,7 +31,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         $headerParts = explode(' ', $request->headers->get('Authorization'));
 
-        if (!(count($headerParts) === 2 && $headerParts[0] === 'Bearer')) {
+        if (!(2 === \count($headerParts) && 'Bearer' === $headerParts[0])) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.malformed_authorization_header'));
         }
 
@@ -42,13 +41,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         return [
             'token' => $headerParts[1],
-            'key'   => $request->query->get('key'),
+            'key' => $request->query->get('key'),
         ];
     }
 
     /**
-     *
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
@@ -69,8 +67,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @var \HeimrichHannot\ApiBundle\Security\User\UserInterface $user
-     * @inheritDoc
+     * @var \HeimrichHannot\ApiBundle\Security\User\UserInterface
+     *                                                            {@inheritdoc}
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
@@ -81,13 +79,25 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_api_key'));
         }
 
-        if (false === $user->hasApiAccess($appModel)) {
+        if (false === $user->hasAppAccess($appModel)) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.user_not_allowed_for_api', ['%key%' => $credentials['key']]));
         }
 
-        $user->setApi($appModel);
+        $user->setApp($appModel);
 
         // if user object is present here, JWT token did already match
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(Request $request)
+    {
+        if ('api' === $request->attributes->get('_scope')) {
+            return true;
+        }
+
+        return false;
     }
 }

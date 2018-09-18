@@ -1,13 +1,12 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\ApiResource;
-
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
@@ -23,7 +22,7 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
     use ContainerAwareTrait;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function create(Request $request, UserInterface $user): ?array
     {
@@ -31,7 +30,7 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function update($id, Request $request, UserInterface $user): ?array
     {
@@ -39,7 +38,7 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function list(Request $request, UserInterface $user): ?array
     {
@@ -47,11 +46,11 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function show($id, Request $request, UserInterface $user): ?array
     {
-        $id = (int)$id;
+        $id = (int) $id;
 
         /** @var MemberModel $model */
         $adapter = $this->framework->createInstance(MemberModel::class);
@@ -68,11 +67,11 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function delete($id, Request $request, UserInterface $user): ?array
     {
-        $id = (int)$id;
+        $id = (int) $id;
 
         /** @var MemberModel $model */
         $adapter = $this->framework->createInstance(MemberModel::class);
@@ -93,5 +92,4 @@ class MemberResource implements ResourceInterface, FrameworkAwareInterface, Cont
             'message' => $this->container->get('translator')->trans('huh.api.message.resource.delete_error', ['%resource%' => 'member', '%id%' => $id]),
         ];
     }
-
 }

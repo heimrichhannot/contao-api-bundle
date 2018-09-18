@@ -1,9 +1,9 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\ApiResource;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface ResourceInterface
 {
     /**
-     * Create an item for this resource
+     * Create an item for this resource.
      *
      * @param Request       $request The request
      * @param UserInterface $user    Current user
@@ -24,7 +24,7 @@ interface ResourceInterface
     public function create(Request $request, UserInterface $user): ?array;
 
     /**
-     * Update an item for this resource
+     * Update an item for this resource.
      *
      * @param mixed         $id      Unique entity id
      * @param Request       $request The request
@@ -35,7 +35,7 @@ interface ResourceInterface
     public function update($id, Request $request, UserInterface $user): ?array;
 
     /**
-     * List items of this resource
+     * List items of this resource.
      *
      * @param Request       $request The request
      * @param UserInterface $user    Current user
@@ -45,7 +45,7 @@ interface ResourceInterface
     public function list(Request $request, UserInterface $user): ?array;
 
     /**
-     * Show item of this resource
+     * Show item of this resource.
      *
      * @param mixed         $id      Unique entity id
      * @param Request       $request The request
@@ -56,7 +56,7 @@ interface ResourceInterface
     public function show($id, Request $request, UserInterface $user): ?array;
 
     /**
-     * Delete item of this resource
+     * Delete item of this resource.
      *
      * @param mixed         $id      Unique entity id
      * @param Request       $request The request

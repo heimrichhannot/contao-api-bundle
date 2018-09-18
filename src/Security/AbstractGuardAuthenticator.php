@@ -1,13 +1,12 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Security;
-
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,13 +41,13 @@ abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Gu
      */
     public function __construct(ContaoFrameworkInterface $framework, JWTCoder $jwtCoder, TranslatorInterface $translator)
     {
-        $this->framework  = $framework;
-        $this->jwtCoder   = $jwtCoder;
+        $this->framework = $framework;
+        $this->jwtCoder = $jwtCoder;
         $this->translator = $translator;
     }
 
     /**
-     * Called when authentication is needed, but it's not sent
+     * Called when authentication is needed, but it's not sent.
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
@@ -61,12 +60,12 @@ abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Gu
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = [
-            'message' => strtr($exception->getMessage(), $exception->getMessageData())
+            'message' => strtr($exception->getMessage(), $exception->getMessageData()),
 
             // or to translate this message
             // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
@@ -76,7 +75,7 @@ abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Gu
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
@@ -85,7 +84,7 @@ abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Gu
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function supportsRememberMe()
     {

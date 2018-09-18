@@ -1,13 +1,12 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Manager;
-
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
@@ -20,14 +19,14 @@ class ApiResourceManager
     protected $framework;
 
     /**
-     * Available resources
+     * Available resources.
      *
      * @var array
      */
     private $resources = [];
 
     /**
-     * Resource service ids
+     * Resource service ids.
      *
      * @var array
      */
@@ -44,7 +43,7 @@ class ApiResourceManager
     }
 
     /**
-     * Add a resource for given alias
+     * Add a resource for given alias.
      *
      * @param ResourceInterface $resource
      * @param string            $alias
@@ -52,12 +51,11 @@ class ApiResourceManager
     public function add(ResourceInterface $resource, string $alias, string $id)
     {
         $this->resources[$alias] = $resource;
-        $this->services[$alias]  = $id;
+        $this->services[$alias] = $id;
     }
 
-
     /**
-     * Get a resource by alias
+     * Get a resource by alias.
      *
      * @param $alias
      *
@@ -71,7 +69,7 @@ class ApiResourceManager
     }
 
     /**
-     * Get all resources
+     * Get all resources.
      *
      * @return array[ResourceInterface]
      */
@@ -81,7 +79,7 @@ class ApiResourceManager
     }
 
     /**
-     * Get all resource keys
+     * Get all resource keys.
      */
     public function keys(): array
     {
@@ -89,7 +87,7 @@ class ApiResourceManager
     }
 
     /**
-     * Get all resources as formatted choice key => value
+     * Get all resources as formatted choice key => value.
      *
      * @return array
      */

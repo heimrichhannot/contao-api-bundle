@@ -1,16 +1,15 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Security\User;
 
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Model;
 use Contao\System;
 use HeimrichHannot\ApiBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -26,6 +25,11 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
     use ContainerAwareTrait;
 
     /**
+     * @var string
+     */
+    protected $modelClass;
+
+    /**
      * @var ContaoFrameworkInterface
      */
     private $framework;
@@ -36,18 +40,13 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
     private $translator;
 
     /**
-     * @var string
-     */
-    protected $modelClass;
-
-    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework, TranslatorInterface $translator)
     {
-        $this->framework  = $framework;
+        $this->framework = $framework;
         $this->translator = $translator;
     }
 
@@ -55,13 +54,11 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
     {
         $this->framework->initialize();
 
-
         if (!$username) {
             throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.invalid_username'));
         }
 
         if (null === ($user = $user->findBy('username', $username))) {
-
             $loaded = false;
 
             // HOOK: pass credentials to callback functions
@@ -70,7 +67,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
                     $loaded = Controller::importStatic($callback[0], 'import', true)->{$callback[1]}($username, System::getContainer()->get('request_stack')->getCurrentRequest()->getPassword() ?: System::getContainer()->get('request_stack')->getCurrentRequest()->request->get('password'), 'tl_member');
 
                     // Load successfull
-                    if ($loaded === true) {
+                    if (true === $loaded) {
                         break;
                     }
                 }
@@ -88,30 +85,30 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
     }
 
     /**
-     * @var array $attributes
-     * {@inheritdoc}
+     * @var array
+     *            {@inheritdoc}
      */
     public function loadUserByUsername($attributes)
     {
         $this->framework->initialize();
 
-        if(!isset($attributes['entity']) || empty($attributes['entity'])){
+        if (!isset($attributes['entity']) || empty($attributes['entity'])) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
         }
 
         $class = $this->container->getParameter($attributes['entity']);
 
-        if(!class_exists($class)){
+        if (!class_exists($class)) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
         }
 
-        $user  = new $class($this->framework);
+        $user = new $class($this->framework);
 
         return $this->loadUserByEntityAndUsername($user, $attributes['username']);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function refreshUser(\Symfony\Component\Security\Core\User\UserInterface $user)
     {
@@ -119,7 +116,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function supportsClass($class)
     {

@@ -1,13 +1,12 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Controller;
-
 
 use Contao\StringUtil;
 use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
@@ -24,9 +23,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ResourceController extends Controller
 {
     /**
-     * @return Response
-     *
      * @param string $alias
+     *
+     * @return Response
      *
      * @Route("/resource/{alias}", name="api_resource_create", methods={"POST"})
      */
@@ -45,10 +44,10 @@ class ResourceController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @param string $alias
-     * @param mixed  $id Entity id
+     * @param mixed  $id    Entity id
+     *
+     * @return Response
      *
      * @Route("/resource/{alias}/{id}", name="api_resource_update", methods={"PUT"})
      */
@@ -67,9 +66,9 @@ class ResourceController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @param string $alias
+     *
+     * @return Response
      *
      * @Route("/resource/{alias}", name="api_resource_list", methods={"GET"})
      */
@@ -88,10 +87,10 @@ class ResourceController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @param string $alias
-     * @param mixed  $id Entity id
+     * @param mixed  $id    Entity id
+     *
+     * @return Response
      *
      * @Route("/resource/{alias}/{id}", name="api_resource_show", methods={"GET"})
      */
@@ -110,10 +109,10 @@ class ResourceController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @param string $alias
-     * @param mixed  $id Entity id
+     * @param mixed  $id    Entity id
+     *
+     * @return Response
      *
      * @Route("/resource/{alias}/{id}", name="api_resource_delete", methods={"DELETE"})
      */
@@ -131,9 +130,8 @@ class ResourceController extends Controller
         return new JsonResponse($resource->delete($id, $request, $this->getUser()));
     }
 
-
     /**
-     * Determine if action is allowed
+     * Determine if action is allowed.
      *
      * @param Request $request
      *
@@ -151,7 +149,7 @@ class ResourceController extends Controller
             return false;
         }
 
-        if (!in_array($request->attributes->get('_route'), $allowed)) {
+        if (!\in_array($request->attributes->get('_route'), $allowed)) {
             return false;
         }
 

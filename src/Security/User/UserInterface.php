@@ -1,9 +1,9 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Security\User;
@@ -15,22 +15,21 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 interface UserInterface extends AdvancedUserInterface
 {
     /**
-     * Set current contao member model
+     * Set current contao member model.
      *
      * @param Model $model
-     *
      */
     public function setModel(Model $model);
 
     /**
-     * Get the current contao member model
+     * Get the current contao member model.
      *
      * @return Model
      */
     public function getModel(): Model;
 
     /**
-     * Set login count
+     * Set login count.
      *
      * @param int $loginCount
      *
@@ -39,14 +38,14 @@ interface UserInterface extends AdvancedUserInterface
     public function setLoginCount(int $loginCount);
 
     /**
-     * Get current login count
+     * Get current login count.
      *
      * @return int
      */
     public function getLoginCount(): int;
 
     /**
-     * Set last login time
+     * Set last login time.
      *
      * @param int $lastLogin
      *
@@ -54,16 +53,15 @@ interface UserInterface extends AdvancedUserInterface
      */
     public function setLastLogin(int $lastLogin);
 
-
     /**
-     * Get last login time
+     * Get last login time.
      *
      * @return int
      */
     public function getLastLogin(): int;
 
     /**
-     * Set current login time
+     * Set current login time.
      *
      * @param int $currentLogin
      *
@@ -71,47 +69,45 @@ interface UserInterface extends AdvancedUserInterface
      */
     public function setCurrentLogin(int $currentLogin);
 
-
     /**
-     * Get current login time
+     * Get current login time.
      *
      * @return int
      */
     public function getCurrentLogin(): int;
 
-
     /**
-     * Find model by value
+     * Find model by value.
      *
      * @param $key
      * @param $value
      *
      * @return UserInterface|null
      */
-    public function findBy($key, $value): ?UserInterface;
+    public function findBy($key, $value): ?self;
 
     /**
-     * Check if user has access to current app
+     * Check if user has access to current app.
      *
      * @param ApiAppModel $model
      *
      * @return bool
      */
-    public function hasApiAccess(ApiAppModel $model): bool;
+    public function hasAppAccess(ApiAppModel $model): bool;
 
     /**
-     * Set active api model
+     * Set active app model.
      *
      * @param ApiAppModel $model
      *
      * @return mixed
      */
-    public function setApi(ApiAppModel $model);
+    public function setApp(ApiAppModel $model);
 
     /**
-     * Get active api model
+     * Get active app model.
      *
      * @return ApiAppModel
      */
-    public function getApi(): ApiAppModel;
+    public function getApp(): ApiAppModel;
 }
