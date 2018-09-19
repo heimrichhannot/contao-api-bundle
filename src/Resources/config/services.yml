@@ -58,3 +58,4 @@ services:
   huh.api.model.app:
     class: HeimrichHannot\ApiBundle\Model\ApiAppModel
     public: true
+    shared: false

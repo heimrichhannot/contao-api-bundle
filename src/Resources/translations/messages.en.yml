@@ -23,3 +23,9 @@ huh.api.exception.resource_action_not_allowed: 'No access to resource %resource%
 huh.api.message.resource.delete_success: 'Successfully deleted resource %resource% with resource_id: %id%'
 huh.api.message.resource.delete_error: 'Error while trying to delete resource %resource% with resource_id: %id%'
 huh.api.message.resource.not_existing: 'Resource %resource% with resource_id: %id% does not exist'
+huh.api.message.resource.create_entity_already_exists: 'Error on create resource %resource%, entity with resource_id: %id% does already exists, try update instead';
+huh.api.message.resource.create_success: 'Successfully created resource %resource% with resource_id: %id%'
+huh.api.message.resource.update_success: 'Successfully updated resource %resource% with resource_id: %id%'
+huh.api.message.resource.none_existing: 'No items found for resource %resource%'
+huh.api.message.resource.create_no_data_provided: 'No data provided within request to create resource %resource%'
+huh.api.message.resource.update_no_data_provided: 'No data provided within request to update resource %resource% with resource_id: %id%'
