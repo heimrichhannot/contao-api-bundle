@@ -23,7 +23,7 @@ huh.api.exception.resource_action_not_allowed: 'Kein Zugriff auf die Resource %r
 huh.api.message.resource.delete_success: 'Resource %resource% mit der resource_id: %id% wurde erfolgreich gelöscht'
 huh.api.message.resource.delete_error: 'Fehler beim Löschen der Resource %resource% mit der resource_id: %id%'
 huh.api.message.resource.not_existing: 'Resource %resource% mit der resource_id: %id% existiert nicht'
-huh.api.message.resource.create_entity_already_exists: 'Fehler beim Erstellen der Resource %resource%. Entität mit der resource_id: %id% existiert bereits, versuchen Sie stattdessen die Resource zu aktualisieren (update).';
+huh.api.message.resource.create_entity_already_exists: 'Fehler beim Erstellen der Resource %resource%. Entität mit der resource_id: %id% existiert bereits, versuchen Sie stattdessen die Resource zu aktualisieren (update).'
 huh.api.message.resource.create_success: 'Resource %resource% mit der resource_id: %id% erfolgreich erstellt'
 huh.api.message.resource.update_success: 'Resource %resource% mit der resource_id: %id% erfolgreich aktualisiert'
 huh.api.message.resource.none_existing: 'Es wurden keine Entitäten für die Resource %resource% gefunden'
