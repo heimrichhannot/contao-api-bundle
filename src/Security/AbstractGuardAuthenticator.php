@@ -9,6 +9,8 @@
 namespace HeimrichHannot\ApiBundle\Security;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +18,10 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\TranslatorInterface;
 
-abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Guard\AbstractGuardAuthenticator
+abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Guard\AbstractGuardAuthenticator implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var JWTCoder
      */

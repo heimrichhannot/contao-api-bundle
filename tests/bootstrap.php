@@ -9,7 +9,7 @@
 error_reporting(E_ALL);
 
 $include = function ($file) {
-    return file_exists($file) ? include $file : false;
+    return file_exists($file) ? include_once $file : false;
 };
 
 // PhpStorm fix (see https://www.drupal.org/node/2597814)
@@ -46,7 +46,6 @@ $legacyLoader = function ($class) {
     $namespaced = 'Contao\\'.$class;
 
     if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced)) {
-        class_alias($namespaced, $class);
     }
 };
 

@@ -8,8 +8,9 @@
 
 namespace HeimrichHannot\ApiBundle\Model;
 
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
+use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\Model;
-use Contao\System;
 
 /**
  * Class ApiAppModel.
@@ -29,8 +30,10 @@ use Contao\System;
  * @property string $start
  * @property string $stop
  */
-class ApiAppModel extends Model
+class ApiAppModel extends Model implements FrameworkAwareInterface
 {
+    use FrameworkAwareTrait;
+
     protected static $strTable = 'tl_api_app';
 
     /**
@@ -41,7 +44,7 @@ class ApiAppModel extends Model
      *
      * @return ApiAppModel|null The app models or null if there are no apps for given key
      */
-    public function findPublishedByKey(string $key, array $options = [])
+    public function findPublishedByKey(string $key, array $options = []): ?self
     {
         $t = static::$strTable;
         $arrColumns = ["$t.key=?"];
@@ -49,8 +52,8 @@ class ApiAppModel extends Model
         $time = \Date::floorToMinute();
         $arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'".($time + 60)."') AND $t.published='1'";
 
-        /** @var Model $adapter */
-        $adapter = System::getContainer()->get('contao.framework')->getAdapter(static::class);
+        /** @var ApiAppModel $adapter */
+        $adapter = $this->framework->getAdapter(static::class);
 
         if (null === $adapter) {
             return null;

@@ -55,3 +55,6 @@ services:
     class: HeimrichHannot\ApiBundle\ApiResource\MemberResource
     tags:
     - { name: huh.api.resource, alias: member}
+  huh.api.model.app:
+    class: HeimrichHannot\ApiBundle\Model\ApiAppModel
+    public: true

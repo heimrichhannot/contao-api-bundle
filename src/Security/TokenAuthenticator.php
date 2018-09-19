@@ -9,7 +9,6 @@
 namespace HeimrichHannot\ApiBundle\Security;
 
 use HeimrichHannot\ApiBundle\Exception\InvalidJWTException;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -72,10 +71,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        /** @var ApiAppModel $appModel */
-        $appModel = $this->framework->createInstance(ApiAppModel::class);
-
-        if (null === ($appModel = $appModel->findPublishedByKey($credentials['key']))) {
+        if (null === ($appModel = $this->container->get('huh.api.model.app')->findPublishedByKey($credentials['key']))) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_api_key'));
         }
 
