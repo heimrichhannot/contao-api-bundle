@@ -7,8 +7,6 @@
 
 A generic API with restricted access to provide access to 3rd party applications.
 
-Test
-
 ## Login `/api/login/member` or `api/login/user`
 
 Login is done via symfony `guard` authenticator in combination with contao members `tl_member` or users `tl_user`.
