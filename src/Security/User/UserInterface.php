@@ -107,7 +107,7 @@ interface UserInterface extends AdvancedUserInterface
     /**
      * Get active app model.
      *
-     * @return ApiAppModel
+     * @return ApiAppModel|null
      */
-    public function getApp(): ApiAppModel;
+    public function getApp(): ?ApiAppModel;
 }

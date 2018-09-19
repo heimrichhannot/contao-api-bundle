@@ -266,7 +266,7 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getApp(): ApiAppModel
+    public function getApp(): ?ApiAppModel
     {
         return $this->_apiAppModel;
     }

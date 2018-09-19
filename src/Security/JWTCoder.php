@@ -8,7 +8,9 @@
 
 namespace HeimrichHannot\ApiBundle\Security;
 
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
+use HeimrichHannot\ApiBundle\Exception\ExpiredTokenException;
 use HeimrichHannot\ApiBundle\Exception\InvalidJWTException;
 
 class JWTCoder
@@ -46,28 +48,12 @@ class JWTCoder
     {
         try {
             $payload = JWT::decode($token, $this->key, [self::ALG]);
+        } catch (ExpiredException $e) {
+            throw new ExpiredTokenException('huh.api.exception.auth.token_expired');
         } catch (\Exception $e) {
             throw new InvalidJWTException('huh.api.exception.auth.invalid_token');
         }
 
-        if ($this->isExpired($payload)) {
-            throw new InvalidJWTException('huh.api.exception.auth.token_expired');
-        }
-
         return $payload;
-    }
-
-    /**
-     * @param object $payload
-     *
-     * @return bool
-     */
-    private function isExpired($payload)
-    {
-        if (isset($payload->exp) && is_numeric($payload->exp)) {
-            return (time() - $payload->exp) > 0;
-        }
-
-        return false;
     }
 }
