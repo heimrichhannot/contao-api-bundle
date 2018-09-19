@@ -81,3 +81,4 @@ curl --header "Authorization: Bearer <login-token>" -H "Content-Type: applicatio
 # test delete() existing resource
 curl --header "Authorization: Bearer <login-token>" -H "Content-Type: application/json" -X DELETE http://domain.tld/api/resource/my_resource/23?key=<api-key>
 ```
+
