@@ -3,21 +3,19 @@
     "type": "contao-bundle",
     "description": "A generic API with restricted access to provide access to 3rd party applications.",
     "license": "LGPL-3.0-or-later",
-    "minimum-stability": "beta",
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "^4.4",
         "symfony/framework-bundle": "^3.4",
         "heimrichhannot/contao-categories-bundle": "^1.0-beta",
-        "twig/extensions": "^1.5",
         "urodoz/truncate-html": "^1.0",
         "firebase/php-jwt": "^4.0"
     },
     "require-dev": {
-        "contao/test-case": "^1.3",
+        "contao/test-case": "1.1",
         "contao/manager-plugin": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.2",
-        "phpunit/phpunit": "^7.0",
+        "phpunit/phpunit": ">=6.0 <6.5",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "php-coveralls/php-coveralls": "^2.0",
