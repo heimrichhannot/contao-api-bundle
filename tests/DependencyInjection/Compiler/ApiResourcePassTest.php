@@ -14,6 +14,8 @@ use HeimrichHannot\ApiBundle\DependencyInjection\Compiler\ApiResourcePass;
 use HeimrichHannot\ApiBundle\Manager\ApiResourceManager;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class ApiResourcePassTest extends ContaoTestCase
 {
@@ -22,6 +24,8 @@ class ApiResourcePassTest extends ContaoTestCase
      */
     public function testProcessWithMissingManagerService()
     {
+        $this->expectException(ServiceNotFoundException::class);
+
         $container = new ContainerBuilder();
 
         $pass = new ApiResourcePass();
@@ -51,6 +55,8 @@ class ApiResourcePassTest extends ContaoTestCase
      */
     public function testProcessWithoutResourceAlias()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $container = new ContainerBuilder();
 
         $definition = new Definition(ApiResourceManager::class, [$this->mockContaoFramework()]);
