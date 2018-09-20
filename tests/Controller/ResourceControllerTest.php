@@ -114,6 +114,64 @@ class ResourceControllerTest extends ContaoTestCase
     }
 
     /**
+     * Test that actions will check if user has access to resource if no resource actions available.
+     */
+    public function testActionWithoutResourceActions(): void
+    {
+        $userModel = $this->mockClassWithProperties(UserModel::class, []);
+        $userModel->method('current')->willReturnSelf();
+
+        $user = new User($this->mockContaoFramework());
+        $user->setModel($userModel);
+
+        $appModel = $this->mockClassWithProperties(ApiAppModel::class, ['resourceActions' => []]);
+        $appModel->method('current')->willReturnSelf();
+        $user->setApp($appModel);
+
+        $memberModelAdapter = $this->mockAdapter(['getPk', 'findByPk']);
+        $memberModelAdapter->method('getPk')->willReturn('id');
+        $memberModelAdapter->method('findByPk')->willReturn(null);
+
+        $framework = $this->mockContaoFramework(
+            [
+                MemberModel::class => $memberModelAdapter,
+            ]
+        );
+
+        $container = $this->mockContainer();
+        $container->set('translator', new Translator('en'));
+
+        $memberResource = new MemberResource();
+        $memberResource->setFramework($framework);
+        $memberResource->setContainer($container);
+
+        $resourceManager = new ApiResourceManager($framework);
+        $resourceManager->add($memberResource, 'member', 'huh.api.resource.member');
+
+        $authenticatedToken = $this->createMock(TokenInterface::class);
+        $authenticatedToken->expects($this->any())->method('getUser')->willReturn($user);
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
+        $tokenStorage->method('getToken')->willReturn($authenticatedToken);
+        $container->set('security.token_storage', $tokenStorage);
+        $container->set('huh.api.manager.resource', $resourceManager);
+
+        $controller = new ResourceController();
+        $controller->setContainer($container);
+
+        $request = new Request();
+        $request->attributes->set('_route', 'api_resource_create');
+        $this->assertEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->createAction('member', $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_update');
+        $this->assertEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->updateAction('member', 1, $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_list');
+        $this->assertEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->listAction('member', $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_show');
+        $this->assertEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->showAction('member', 1, $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_delete');
+        $this->assertEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->deleteAction('member', 1, $request)->getContent())->message);
+    }
+
+    /**
      * Test that actions will check if user has access to resource.
      */
     public function testActionWithoutActionAccess(): void

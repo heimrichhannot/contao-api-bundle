@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\ApiBundle\Security\User;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
 use HeimrichHannot\ApiBundle\Entity\User;
@@ -58,13 +57,16 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
             throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.invalid_username'));
         }
 
-        if (null === ($user = $user->findBy('username', $username))) {
+        if (null === ($userFound = $user->findBy('username', $username))) {
             $loaded = false;
 
             // HOOK: pass credentials to callback functions
             if (isset($GLOBALS['TL_HOOKS']['importUser']) && \is_array($GLOBALS['TL_HOOKS']['importUser'])) {
+                /** @var System $system */
+                $system = $this->framework->getAdapter(System::class);
+
                 foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback) {
-                    $loaded = Controller::importStatic($callback[0], 'import', true)->{$callback[1]}($username, System::getContainer()->get('request_stack')->getCurrentRequest()->getPassword() ?: System::getContainer()->get('request_stack')->getCurrentRequest()->request->get('password'), 'tl_member');
+                    $loaded = $system->importStatic($callback[0], 'import', true)->{$callback[1]}($username, $this->container->get('request_stack')->getCurrentRequest()->getPassword() ?: $this->container->get('request_stack')->getCurrentRequest()->request->get('password'), $user->getModelTable());
 
                     // Load successfull
                     if (true === $loaded) {
@@ -74,14 +76,14 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
             }
 
             // Return if the user still cannot be loaded
-            if (!$loaded || null === ($user = $user->findBy('username', $username))) {
+            if (true === $loaded && null === ($userFound = $user->findBy('username', $username))) {
                 throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_found', ['%username%' => $username]));
             }
 
             throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_existing', ['%username%' => $username]));
         }
 
-        return $user;
+        return $userFound;
     }
 
     /**
@@ -93,7 +95,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
         $this->framework->initialize();
 
         if (!isset($attributes['entity']) || empty($attributes['entity'])) {
-            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
+            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity', ['%entity%' => $attributes['entity']]));
         }
 
         $class = $this->container->getParameter($attributes['entity']);

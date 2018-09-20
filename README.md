@@ -57,7 +57,7 @@ curl --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2
 
 Now you are able to access crud functionality by using the related `HTTP method`:
 
-|   | HTTP-Method | Resource-Method (Mapping) |
+| Path | HTTP-Method | Resource-Method (Mapping) |
 |---|---|---|
 | /api/resource/my_resource | POST | create() new resource |
 | /api/resource/my_resource/23  | PUT | update() existing resource with id 23 |
@@ -68,17 +68,40 @@ Now you are able to access crud functionality by using the related `HTTP method`
 ```
 # test create() new resource
 curl --header "Authorization: Bearer <login-token>" -H "Content-Type: application/json" -X POST -d "{"title":"My test title", "published":true}" http://domain.tld/api/resource/my_resource?key=<api-key>
+```
 
+``` 
 # test update() existing resource
 curl --header "Authorization: Bearer <login-token>" -H "Content-Type: application/json" -X PUT -d "{"title":"My new test title", "published":false}" http://domain.tld/api/resource/my_resource/23?key=<api-key>
+```
 
+```
 # test list() all resources
 curl --header "Authorization: Bearer <login-token>" -H "Content-Type: application/json" -X GET http://domain.tld/api/resource/my_resource?key=<api-key>
+```
 
+```
 # test show() existing resource
 curl --header "Authorization: Bearer <login-token>" -H "Content-Type: application/json" -X GET http://domain.tld/api/resource/my_resource/23?key=<api-key>
+```
 
+```
 # test delete() existing resource
 curl --header "Authorization: Bearer <login-token>" -H "Content-Type: application/json" -X DELETE http://domain.tld/api/resource/my_resource/23?key=<api-key>
 ```
+
+### Available Resources
+
+#### Service: huh.api.resource.member 
+
+Skeleton resource that provides simple crud functionality with contao member (tl_member) entity 
+
+| Path | HTTP-Method | Resource-Method (Mapping) | Additional GET Parameters
+|---|---|---|---|
+| /api/resource/member | POST | create() new member | - |
+| /api/resource/member/23  | PUT | update() existing member with id 23 |- |
+| /api/resource/member  | GET | list() all member  | limit, offset |
+| /api/resource/member/23  | GET | show() existing member with id 23 | - |
+| /api/resource/member/23  | DELETE | delete() existing member with id 23 | - |
+
 

@@ -270,4 +270,12 @@ class User implements UserInterface
     {
         return $this->_apiAppModel;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getModelTable(): string
+    {
+        return static::$table;
+    }
 }

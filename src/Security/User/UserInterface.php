@@ -110,4 +110,11 @@ interface UserInterface extends AdvancedUserInterface
      * @return ApiAppModel|null
      */
     public function getApp(): ?ApiAppModel;
+
+    /**
+     * Get the model table.
+     *
+     * @return string
+     */
+    public function getModelTable(): string;
 }

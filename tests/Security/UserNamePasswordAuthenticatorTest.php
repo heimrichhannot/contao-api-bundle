@@ -8,7 +8,11 @@
 
 namespace HeimrichHannot\ApiBundle\Test\Security;
 
+use Contao\Config;
+use Contao\MemberModel;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use HeimrichHannot\ApiBundle\Entity\Member;
 use HeimrichHannot\ApiBundle\Security\JWTCoder;
 use HeimrichHannot\ApiBundle\Security\UsernamePasswordAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,6 +121,165 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
     }
 
     /**
+     * Test checkCredentials() with invalid password.
+     */
+    public function testCheckCredentialsWithInvalidPassword()
+    {
+        $credentials = [
+            'username' => 'user@test.tld',
+            'password' => 'secret',
+            'entity' => 'huh.api.entity.member',
+        ];
+
+        $framework = $this->mockContaoFramework();
+        $encoder = new JWTCoder('secret');
+        $translator = new Translator('en');
+        $authenticator = new UsernamePasswordAuthenticator($framework, $encoder, $translator);
+
+        $memberObject = new \stdClass();
+        $memberObject->username = 'user@test.tld';
+        $memberObject->password = '123';
+        $memberObject->loginCount = 3;
+
+        $model = $this->mockClassWithProperties(MemberModel::class, (array) $memberObject);
+        $model->method('current')->willReturnSelf();
+
+        $member = new Member($framework);
+        $member->setModel($model);
+
+        try {
+            $authenticator->checkCredentials($credentials, $member);
+        } catch (AuthenticationException $e) {
+            $this->assertEquals('huh.api.exception.auth.invalid_credentials', $e->getMessage());
+        }
+    }
+
+    /**
+     * Test checkCredentials().
+     */
+    public function testCheckCredentials()
+    {
+        $credentials = [
+            'username' => 'user@test.tld',
+            'password' => 'secretPassword',
+            'entity' => 'huh.api.entity.member',
+        ];
+
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter->method('get')->with('loginCount')->willReturn(3);
+
+        $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
+        $encoder = new JWTCoder('secret');
+        $translator = new Translator('en');
+        $authenticator = new UsernamePasswordAuthenticator($framework, $encoder, $translator);
+
+        $time = time();
+
+        $memberObject = new \stdClass();
+        $memberObject->username = 'user@test.tld';
+        $memberObject->password = password_hash($credentials['password'], PASSWORD_DEFAULT);
+        $memberObject->loginCount = 3;
+        $memberObject->currentLogin = $time - 500;
+
+        $model = $this->mockClassWithProperties(MemberModel::class, (array) $memberObject);
+        $model->method('current')->willReturnSelf();
+
+        $member = new Member($framework);
+        $member->setModel($model);
+
+        $this->assertTrue($authenticator->checkCredentials($credentials, $member));
+    }
+
+    /**
+     * Test checkCredentials() with update password (password_needs_rehash).
+     */
+    public function testCheckCredentialsReHash()
+    {
+        $credentials = [
+            'username' => 'user@test.tld',
+            'password' => 'rasmuslerdorf',
+            'entity' => 'huh.api.entity.member',
+        ];
+
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter->method('get')->with('loginCount')->willReturn(3);
+
+        $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
+        $encoder = new JWTCoder('secret');
+        $translator = new Translator('en');
+        $authenticator = new UsernamePasswordAuthenticator($framework, $encoder, $translator);
+
+        $time = time();
+
+        $memberObject = new \stdClass();
+        $memberObject->username = 'user@test.tld';
+        $memberObject->password = '$2y$07$BCryptRequires22Chrcte/VlQH0piJtjXl.0t1XkA8pw9dMXTpOq';
+        $memberObject->loginCount = 3;
+        $memberObject->currentLogin = $time - 500;
+
+        $model = $this->mockClassWithProperties(MemberModel::class, (array) $memberObject);
+        $model->method('current')->willReturnSelf();
+
+        $member = new Member($framework);
+        $member->setModel($model);
+
+        $this->assertTrue($authenticator->checkCredentials($credentials, $member));
+    }
+
+    /**
+     * Test checkCredentials() with checkCredentials HOOK.
+     */
+    public function testCheckCredentialsHook()
+    {
+        $credentials = [
+            'username' => 'user@test.tld',
+            'password' => 'secretPassword',
+            'entity' => 'huh.api.entity.member',
+        ];
+
+        $time = time();
+
+        $memberObject = new \stdClass();
+        $memberObject->username = 'user@test.tld';
+        $memberObject->password = 'wrongPassword';
+        $memberObject->loginCount = 3;
+        $memberObject->currentLogin = $time - 500;
+
+        $hookMock = $this->createMock(__CLASS__);
+        $hookMock->method('checkCredentialsHook')->willReturnCallback(
+            function ($username, $password, $member) {
+                return 'user@test.tld' === $username;
+            }
+        );
+
+        $container = $this->mockContainer();
+        $container->set('huh.api.test.hooks', $hookMock);
+
+        $GLOBALS['TL_HOOKS']['checkCredentials'][] = ['huh.api.test.hooks', 'checkCredentialsHook'];
+
+        System::setContainer($container);
+
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter->method('get')->with('loginCount')->willReturn(3);
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter->method('importStatic')->willReturn($hookMock);
+
+        $framework = $this->mockContaoFramework([Config::class => $configAdapter, System::class => $systemAdapter]);
+        $encoder = new JWTCoder('secret');
+        $translator = new Translator('en');
+        $authenticator = new UsernamePasswordAuthenticator($framework, $encoder, $translator);
+
+        $model = $this->mockClassWithProperties(MemberModel::class, (array) $memberObject);
+        $model->method('current')->willReturnSelf();
+
+        $member = new Member($framework);
+        $member->setModel($model);
+
+        $this->assertTrue($authenticator->checkCredentials($credentials, $member));
+    }
+
+    /**
      * Test supports().
      */
     public function testSupports()
@@ -138,5 +301,10 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         // with login member scope
         $request->attributes->set('_scope', 'api_login_member');
         $this->assertTrue($authenticator->supports($request));
+    }
+
+    public function checkCredentialsHook($username, $password, $member)
+    {
+        return true;
     }
 }

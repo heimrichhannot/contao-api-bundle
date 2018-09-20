@@ -61,8 +61,10 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
 
         // HOOK: pass credentials to callback functions
         if (!$authenticated && isset($GLOBALS['TL_HOOKS']['checkCredentials']) && \is_array($GLOBALS['TL_HOOKS']['checkCredentials'])) {
+            /** @var System $system */
+            $system = $this->framework->getAdapter(System::class);
             foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback) {
-                $authenticated = System::importStatic($callback[0], 'auth', true)->{$callback[1]}($credentials['username'], $credentials['password'], $user);
+                $authenticated = $system->importStatic($callback[0], 'auth', true)->{$callback[1]}($credentials['username'], $credentials['password'], $user);
 
                 // Authentication successfull
                 if (true === $authenticated) {
@@ -78,9 +80,12 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_credentials'));
         }
 
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
         $user->setLastLogin($user->getCurrentLogin());
         $user->setCurrentLogin($time);
-        $user->setLoginCount(Config::get('loginCount'));
+        $user->setLoginCount((int) $config->get('loginCount'));
         $user->getModel()->save();
 
         return true;
