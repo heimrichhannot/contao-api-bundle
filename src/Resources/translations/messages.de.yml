@@ -1,4 +1,5 @@
 # exception messages
+huh.api.exception.auth.required: Authentifizierung erforderlich
 huh.api.exception.auth.invalid_credentials: Ungültiger Benutzername oder Passwort
 huh.api.exception.auth.post_method_only: Anmeldung nur per POST-Anfrage möglich.
 huh.api.exception.auth.refresh_not_possible: Nutzer kann nicht aktualisiert werden.

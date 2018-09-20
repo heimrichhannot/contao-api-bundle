@@ -170,4 +170,68 @@ class ResourceControllerTest extends ContaoTestCase
         $request->attributes->set('_route', 'api_resource_delete');
         $this->assertEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->deleteAction('member', 1, $request)->getContent())->message);
     }
+
+    /**
+     * Test that actions will check if user has access to all actions.
+     */
+    public function testActionWithAllAccess(): void
+    {
+        $userModel = $this->mockClassWithProperties(UserModel::class, []);
+        $userModel->method('current')->willReturnSelf();
+
+        $user = new User($this->mockContaoFramework());
+        $user->setModel($userModel);
+
+        $appModel = $this->mockClassWithProperties(ApiAppModel::class, ['resourceActions' => ['api_resource_create', 'api_resource_update', 'api_resource_list', 'api_resource_show', 'api_resource_delete']]);
+        $appModel->method('current')->willReturnSelf();
+        $user->setApp($appModel);
+
+        $memberModelAdapter = $this->mockAdapter(['getPk', 'findByPk', 'count']);
+        $memberModelAdapter->method('getPk')->willReturn('id');
+        $memberModelAdapter->method('findByPk')->willReturn(null);
+        $memberModelAdapter->method('count')->willReturn(0);
+
+        $framework = $this->mockContaoFramework(
+            [
+                MemberModel::class => $memberModelAdapter,
+            ]
+        );
+
+        $container = $this->mockContainer();
+        $container->set('translator', new Translator('en'));
+
+        $memberResource = new MemberResource();
+        $memberResource->setFramework($framework);
+        $memberResource->setContainer($container);
+
+        $resourceManager = new ApiResourceManager($framework);
+        $resourceManager->add($memberResource, 'member', 'huh.api.resource.member');
+
+        $authenticatedToken = $this->createMock(TokenInterface::class);
+        $authenticatedToken->expects($this->any())->method('getUser')->willReturn($user);
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
+        $tokenStorage->method('getToken')->willReturn($authenticatedToken);
+        $container->set('security.token_storage', $tokenStorage);
+        $container->set('huh.api.manager.resource', $resourceManager);
+
+        $controller = new ResourceController();
+        $controller->setContainer($container);
+
+        $request = new Request();
+        $request->attributes->set('_route', 'api_resource_create');
+        $this->assertNotEquals('huh.api.exception.resource_not_existing', json_decode($controller->createAction('member', $request)->getContent())->message);
+        $this->assertNotEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->createAction('member', $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_update');
+        $this->assertNotEquals('huh.api.exception.resource_not_existing', json_decode($controller->updateAction('member', 1, $request)->getContent())->message);
+        $this->assertNotEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->updateAction('member', 1, $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_list');
+        $this->assertNotEquals('huh.api.exception.resource_not_existing', json_decode($controller->listAction('member', $request)->getContent())->message);
+        $this->assertNotEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->listAction('member', $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_show');
+        $this->assertNotEquals('huh.api.exception.resource_not_existing', json_decode($controller->showAction('member', 1, $request)->getContent())->message);
+        $this->assertNotEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->showAction('member', 1, $request)->getContent())->message);
+        $request->attributes->set('_route', 'api_resource_delete');
+        $this->assertNotEquals('huh.api.exception.resource_not_existing', json_decode($controller->deleteAction('member', 1, $request)->getContent())->message);
+        $this->assertNotEquals('huh.api.exception.resource_action_not_allowed', json_decode($controller->deleteAction('member', 1, $request)->getContent())->message);
+    }
 }

@@ -1,4 +1,5 @@
 # exception messages
+huh.api.exception.auth.required: Authentication Required
 huh.api.exception.auth.invalid_credentials: Invalid username or password
 huh.api.exception.auth.post_method_only: Authentication only allowed by POST HTTP-Method.
 huh.api.exception.auth.refresh_not_possible: Cannot refresh a Contao user.

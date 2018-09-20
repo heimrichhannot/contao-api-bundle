@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\ApiBundle\Security;
 
+use HeimrichHannot\ApiBundle\Exception\ExpiredTokenException;
 use HeimrichHannot\ApiBundle\Exception\InvalidJWTException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -53,7 +54,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             $payload = $this->jwtCoder->decode($credentials['token']);
         } catch (InvalidJWTException $e) {
             throw new AuthenticationException($this->translator->trans($e->getMessage()));
-        } catch (\Exception $e) {
+        } catch (ExpiredTokenException $e) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.malformed_jwt'));
         }
 

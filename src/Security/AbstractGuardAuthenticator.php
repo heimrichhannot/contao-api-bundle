@@ -57,7 +57,7 @@ abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Gu
     {
         $data = [
             // you might translate this message
-            'message' => 'Authentication Required',
+            'message' => $this->translator->trans('huh.api.exception.auth.required'),
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
