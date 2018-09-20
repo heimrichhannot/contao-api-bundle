@@ -1,7 +1,7 @@
 # Contao api bundle
 
-![](https://img.shields.io/packagist/v/heimrichhannot/contao-api-bundle.svg)
-![](https://img.shields.io/packagist/dt/heimrichhannot/contao-api-bundle.svg)
+[![](https://img.shields.io/packagist/v/heimrichhannot/contao-api-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-api-bundle)
+[![](https://img.shields.io/packagist/dt/heimrichhannot/contao-api-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-api-bundle/stats)
 [![](https://img.shields.io/travis/heimrichhannot/contao-api-bundle/master.svg)](https://travis-ci.org/heimrichhannot/contao-api-bundle/)
 [![](https://img.shields.io/coveralls/heimrichhannot/contao-api-bundle/master.svg)](https://coveralls.io/github/heimrichhannot/contao-api-bundle)
 
