@@ -34,10 +34,10 @@ class ApiApp
             return $value;
         }
 
-        /** @var ApiAppModel $model */
-        $model = $this->framework->createInstance(ApiAppModel::class);
+        /** @var ApiAppModel $adapter */
+        $adapter = $this->framework->getAdapter(ApiAppModel::class);
 
-        if (null === ($model = $model->findByPk($dc->id))) {
+        if (null === ($model = $adapter->findByPk($dc->id))) {
             return $value;
         }
 
@@ -49,6 +49,8 @@ class ApiApp
 
     /**
      * Check access to applications and permissions.
+     *
+     * @codeCoverageIgnore Too time-consuming to test checkPermission()
      */
     public function checkPermission()
     {

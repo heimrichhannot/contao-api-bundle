@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2018-09-21
+
+#### Added
+- unit testing to maintain coverage and change things to be more testable
+
 ## [1.0.1] - 2018-09-20
 
 #### Fixed

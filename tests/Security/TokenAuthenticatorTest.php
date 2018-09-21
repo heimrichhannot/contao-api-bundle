@@ -188,12 +188,17 @@ class TokenAuthenticatorTest extends ContaoTestCase
         $userModelAdapter = $this->mockAdapter(['findBy']);
         $userModelAdapter->method('findBy')->willReturn($userClass);
 
+        $userAdapter = $this->createMock(User::class);
+        $userAdapter->method('findBy')->willReturnSelf();
+        $userAdapter->method('getUsername')->willReturn('user@test.tld');
+
         $encoder = new JWTCoder('secret');
         $framework = $this->mockContaoFramework(
             [
                 UserModel::class => $userModelAdapter,
             ]
         );
+        $framework->method('createInstance')->willReturn($userAdapter);
         $translator = new Translator('en');
         $authenticator = new TokenAuthenticator($framework, $encoder, $translator);
 

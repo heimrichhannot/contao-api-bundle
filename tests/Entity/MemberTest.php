@@ -188,4 +188,16 @@ class MemberTest extends ContaoTestCase
 
         $this->assertFalse($member->hasAppAccess($appModel));
     }
+
+    /**
+     * Test getModelTable().
+     */
+    public function testGetModelTable()
+    {
+        $framework = $this->mockContaoFramework();
+
+        $user = new Member($framework);
+
+        $this->assertEquals('tl_member', $user->getModelTable());
+    }
 }

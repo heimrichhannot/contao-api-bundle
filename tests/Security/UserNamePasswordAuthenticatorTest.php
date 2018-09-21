@@ -14,6 +14,7 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use HeimrichHannot\ApiBundle\Entity\Member;
 use HeimrichHannot\ApiBundle\Security\JWTCoder;
+use HeimrichHannot\ApiBundle\Security\User\UserProvider;
 use HeimrichHannot\ApiBundle\Security\UsernamePasswordAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -277,6 +278,40 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $member->setModel($model);
 
         $this->assertTrue($authenticator->checkCredentials($credentials, $member));
+    }
+
+    /**
+     * Test getUser().
+     */
+    public function testGetUser()
+    {
+        $credentials = [
+            'username' => 'user@test.tld',
+            'password' => 'secretPassword',
+            'entity' => 'huh.api.entity.member',
+        ];
+
+        $memberModel = $this->mockClassWithProperties(MemberModel::class, ['username' => 'user@test.tld']);
+        $memberModel->method('current')->willReturnSelf();
+
+        $memberAdapter = $this->createMock(Member::class);
+        $memberAdapter->method('findBy')->willReturnSelf();
+        $memberAdapter->method('getUserName')->willReturn('user@test.tld');
+
+        $framework = $this->mockContaoFramework();
+        $framework->method('createInstance')->willReturn($memberAdapter);
+
+        $encoder = new JWTCoder('secret');
+        $translator = new Translator('en');
+        $authenticator = new UsernamePasswordAuthenticator($framework, $encoder, $translator);
+
+        $container = $this->mockContainer();
+        $container->setParameter('huh.api.entity.member', Member::class);
+
+        $userProvider = new UserProvider($framework, $translator);
+        $userProvider->setContainer($container);
+
+        $this->assertEquals($memberModel->username, $authenticator->getUser($credentials, $userProvider)->getUsername());
     }
 
     /**

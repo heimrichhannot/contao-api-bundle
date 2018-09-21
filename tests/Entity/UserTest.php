@@ -490,4 +490,16 @@ class UserTest extends ContaoTestCase
 
         $this->assertFalse($user->hasAppAccess($appModel));
     }
+
+    /**
+     * Test getModelTable().
+     */
+    public function testGetModelTable()
+    {
+        $framework = $this->mockContaoFramework();
+
+        $user = new User($framework);
+
+        $this->assertEquals('tl_user', $user->getModelTable());
+    }
 }

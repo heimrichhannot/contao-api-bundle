@@ -104,7 +104,8 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
         }
 
-        $user = new $class($this->framework);
+        /** @var UserInterface $user */
+        $user = $this->framework->createInstance($class, [$this->framework]);
 
         return $this->loadUserByEntityAndUsername($user, $attributes['username']);
     }
