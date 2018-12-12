@@ -8,6 +8,6 @@
 
 namespace HeimrichHannot\ApiBundle\ApiResource;
 
-class MemberResource extends EntityResource
+class CalendarEventResource extends EntityResource
 {
 }

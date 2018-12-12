@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2018-12-12
+
+#### Changed
+- restructuring of resource handling (resource vs. entity resource)
+
+#### Added
+- tl_api_app_action entity for handling action specific configuration
+
+## [1.0.3] - 2018-12-10
+
+#### Removed
+- urodoz/truncate-html from dependencies
+
+#### Changed
+- optimized palette handling
+
 ## [1.0.2] - 2018-09-21
 
 #### Added

@@ -9,10 +9,20 @@
 namespace HeimrichHannot\ApiBundle\Manager;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\DataContainer;
+use Contao\System;
 use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
 
 class ApiResourceManager
 {
+    const TYPE_RESOURCE = 'resource';
+    const TYPE_ENTITY_RESOURCE = 'entity_resource';
+
+    const RESOURCE_TYPES = [
+        self::TYPE_RESOURCE,
+        self::TYPE_ENTITY_RESOURCE,
+    ];
+
     /**
      * @var ContaoFrameworkInterface
      */
@@ -91,14 +101,41 @@ class ApiResourceManager
      *
      * @return array
      */
-    public function choices(): array
+    public function choices(DataContainer $dc): array
     {
         $choices = [];
 
+        if (!$dc->activeRecord->type) {
+            return [];
+        }
+
+        $allowedResources = $this->getResourcesByAppType($dc->activeRecord->type);
+
         foreach ($this->resources as $key => $resource) {
-            $choices[$key] = sprintf($key.' ['.$this->services[$key].']');
+            if (\in_array($key, $allowedResources)) {
+                $choices[$key] = sprintf($key.' ['.$this->services[$key].']');
+            }
         }
 
         return $choices;
+    }
+
+    public function getResourcesByAppType(string $appType)
+    {
+        $resources = System::getContainer()->getParameter('huh.api');
+
+        if (!isset($resources['api']['resources'])) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($resources['api']['resources'] as $resource) {
+            if ($resource['type'] === $appType) {
+                $result[] = $resource['name'];
+            }
+        }
+
+        return $result;
     }
 }

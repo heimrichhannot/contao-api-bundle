@@ -14,6 +14,7 @@ use Contao\Date;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\UserModel;
+use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
 use HeimrichHannot\ApiBundle\Model\ApiAppModel;
 use HeimrichHannot\ApiBundle\Security\User\UserInterface;
 
@@ -33,6 +34,11 @@ class User implements UserInterface
      * @var ApiAppModel
      */
     protected $_apiAppModel;
+
+    /**
+     * @var ApiAppActionModel
+     */
+    protected $_apiAppActionModel;
 
     /**
      * Table name.
@@ -269,6 +275,22 @@ class User implements UserInterface
     public function getApp(): ?ApiAppModel
     {
         return $this->_apiAppModel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAppAction(ApiAppActionModel $model)
+    {
+        $this->_apiAppActionModel = $model->current();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAppAction(): ?ApiAppActionModel
+    {
+        return $this->_apiAppActionModel;
     }
 
     /**

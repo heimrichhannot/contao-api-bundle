@@ -17,6 +17,7 @@ use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use HeimrichHannot\ApiBundle\ContaoApiBundle;
+use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -61,7 +62,12 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
             return $extensionConfigs;
         }
 
-        return $extensionConfigs;
+        return ContainerUtil::mergeConfigFile(
+            'huh_api',
+            $extensionName,
+            $extensionConfigs,
+            __DIR__.'/../Resources/config/config.yml'
+        );
     }
 
     /**

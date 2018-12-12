@@ -63,6 +63,7 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         if (!$authenticated && isset($GLOBALS['TL_HOOKS']['checkCredentials']) && \is_array($GLOBALS['TL_HOOKS']['checkCredentials'])) {
             /** @var System $system */
             $system = $this->framework->getAdapter(System::class);
+
             foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback) {
                 $authenticated = $system->importStatic($callback[0], 'auth', true)->{$callback[1]}($credentials['username'], $credentials['password'], $user);
 

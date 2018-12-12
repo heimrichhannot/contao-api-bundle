@@ -3,6 +3,7 @@
 $GLOBALS['TL_DCA']['tl_api_app'] = [
     'config'      => [
         'dataContainer'     => 'Table',
+        'ctable'            => 'tl_api_app_action',
         'enableVersioning'  => true,
         'onload_callback'   => [
             ['huh.api.backend.api_app', 'checkPermission'],
@@ -40,29 +41,35 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             ],
         ],
         'operations'        => [
-            'edit'   => [
-                'label' => &$GLOBALS['TL_LANG']['tl_api_app']['edit'],
-                'href'  => 'act=edit',
-                'icon'  => 'edit.gif',
+            'edit'       => [
+                'label'           => &$GLOBALS['TL_LANG']['tl_api_app']['edit'],
+                'href'            => 'table=tl_api_app_action',
+                'icon'            => 'edit.svg',
+                'button_callback' => ['huh.api.backend.api_app', 'editButton']
             ],
-            'copy'   => [
+            'editheader' => [
+                'label' => &$GLOBALS['TL_LANG']['tl_api_app']['editheader'],
+                'href'  => 'act=edit',
+                'icon'  => 'header.svg',
+            ],
+            'copy'       => [
                 'label' => &$GLOBALS['TL_LANG']['tl_api_app']['copy'],
                 'href'  => 'act=copy',
                 'icon'  => 'copy.gif',
             ],
-            'delete' => [
+            'delete'     => [
                 'label'      => &$GLOBALS['TL_LANG']['tl_api_app']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\''.$GLOBALS['TL_LANG']['MSC']['deleteConfirm'].'\'))return false;Backend.getScrollOffset()"',
+                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
             ],
-            'toggle' => [
+            'toggle'     => [
                 'label'           => &$GLOBALS['TL_LANG']['tl_api_app']['toggle'],
                 'icon'            => 'visible.gif',
                 'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
                 'button_callback' => ['huh.filter.backend.filter_config_element', 'toggleIcon'],
             ],
-            'show'   => [
+            'show'       => [
                 'label' => &$GLOBALS['TL_LANG']['tl_api_app']['show'],
                 'href'  => 'act=show',
                 'icon'  => 'show.gif',
@@ -70,23 +77,24 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
         ],
     ],
     'palettes'    => [
-        '__selector__' => ['type', 'published'],
-        'default'      => '{general_legend},title,type',
-        'resource'     => '{general_legend},title,type,author;{resource_legend},resource,resourceActions,categories;{security_legend},key,groups,mGroups;{publish_legend},published',
+        '__selector__'    => ['type', 'limitFields', 'limitFormattedFields', 'published'],
+        'default'         => '{general_legend},title,type',
+        'resource'        => '{general_legend},title,type,author;{resource_legend},resource,resourceActions,categories;{security_legend},key,groups,mGroups;{publish_legend},published',
+        'entity_resource' => '{general_legend},title,type,author;{resource_legend},resource;{security_legend},key,groups,mGroups;{publish_legend},published',
     ],
     'subpalettes' => [
-        'published' => 'start,stop',
+        'published'            => 'start,stop',
     ],
     'fields'      => [
-        'id'              => [
+        'id'                     => [
             'sql' => "int(10) unsigned NOT NULL auto_increment",
         ],
-        'tstamp'          => [
+        'tstamp'                 => [
             'label' => &$GLOBALS['TL_LANG']['tl_api_app']['tstamp'],
             'eval'  => ['rgxp' => 'datim'],
             'sql'   => "varchar(64) NOT NULL default ''",
         ],
-        'dateAdded'       => [
+        'dateAdded'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['dateAdded'],
             'sorting'   => true,
             'flag'      => 7,
@@ -94,18 +102,18 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'timepicker' => true, 'doNotCopy' => true, 'mandatory' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
-        'type'            => [
+        'type'                   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['type'],
             'flag'      => 1,
             'exclude'   => true,
             'filter'    => true,
             'inputType' => 'select',
-            'options'   => ['resource'],
-            'reference' => &$GLOBALS['TL_LANG']['tl_api_app']['reference']['type'],
-            'eval'      => ['maxlength' => 32, 'tl_class' => 'w50 chosen', 'submitOnChange' => true],
+            'options'   => System::getContainer()->get('huh.api.manager.resource')::RESOURCE_TYPES,
+            'reference' => &$GLOBALS['TL_LANG']['tl_api_app']['reference'],
+            'eval'      => ['maxlength' => 32, 'tl_class' => 'w50 chosen', 'submitOnChange' => true, 'mandatory' => true, 'includeBlankOption' => true],
             'sql'       => "varchar(32) NOT NULL default ''",
         ],
-        'title'           => [
+        'title'                  => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['title'],
             'flag'      => 1,
             'exclude'   => true,
@@ -114,29 +122,29 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'      => ['maxlength' => 255, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
-        'resource'        => [
+        'resource'               => [
             'label'            => &$GLOBALS['TL_LANG']['tl_api_app']['resource'],
             'flag'             => 1,
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['huh.api.manager.resource', 'choices'],
-            'reference'        => &$GLOBALS['TL_LANG']['tl_api_app']['reference']['resource'],
-            'eval'             => ['maxlength' => 32, 'tl_class' => 'w50 chosen', 'submitOnChange' => true],
+            'reference'        => &$GLOBALS['TL_LANG']['tl_api_app']['reference'],
+            'eval'             => ['maxlength' => 32, 'tl_class' => 'w50 chosen', 'submitOnChange' => true, 'mandatory' => true, 'includeBlankOption' => true],
             'sql'              => "varchar(32) NOT NULL default ''",
         ],
-        'resourceActions' => [
+        'resourceActions'        => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['resourceActions'],
             'flag'      => 1,
             'exclude'   => true,
             'filter'    => true,
             'inputType' => 'checkbox',
             'options'   => ['api_resource_create', 'api_resource_update', 'api_resource_list', 'api_resource_show', 'api_resource_delete'],
-            'reference' => &$GLOBALS['TL_LANG']['tl_api_app']['reference']['resourceActions'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_api_app']['reference'],
             'sql'       => "blob NULL",
             'eval'      => ['multiple' => true, 'tl_class' => 'w50 autoheight'],
         ],
-        'mGroups'         => [
+        'mGroups'                => [
             'label'      => &$GLOBALS['TL_LANG']['tl_api_app']['mGroups'],
             'exclude'    => true,
             'inputType'  => 'checkbox',
@@ -145,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'sql'        => "blob NULL",
             'relation'   => ['type' => 'hasMany', 'load' => 'lazy'],
         ],
-        'groups'          => [
+        'groups'                 => [
             'label'      => &$GLOBALS['TL_LANG']['tl_api_app']['groups'],
             'exclude'    => true,
             'inputType'  => 'checkbox',
@@ -154,7 +162,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'sql'        => "blob NULL",
             'relation'   => ['type' => 'hasMany', 'load' => 'lazy'],
         ],
-        'key'             => [
+        'key'                    => [
             'label'         => &$GLOBALS['TL_LANG']['tl_api_app']['key'],
             'search'        => true,
             'inputType'     => 'text',
@@ -162,7 +170,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'          => ['tl_class' => 'clr long', 'unique' => true],
             'sql'           => "varchar(255) NOT NULL default ''",
         ],
-        'published'       => [
+        'published'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['published'],
             'exclude'   => true,
             'filter'    => true,
@@ -170,14 +178,14 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'eval'      => ['doNotCopy' => true, 'submitOnChange' => true, 'tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'start'           => [
+        'start'                  => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['start'],
             'exclude'   => true,
             'inputType' => 'text',
             'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'],
             'sql'       => "varchar(10) NOT NULL default ''",
         ],
-        'stop'            => [
+        'stop'                   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app']['stop'],
             'exclude'   => true,
             'inputType' => 'text',
@@ -192,6 +200,6 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
     [
         'addPrimaryCategory'   => false,
         'forcePrimaryCategory' => false,
-        'mandatory' => false
+        'mandatory'            => false
     ]
 );

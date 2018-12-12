@@ -137,18 +137,29 @@ class ResourceController extends Controller
      */
     protected function isActionAllowed(Request $request): bool
     {
-        if (null === ($api = $this->getUser()->getApp())) {
+        if (null === ($app = $this->getUser()->getApp())) {
             return false;
         }
 
-        $allowed = StringUtil::deserialize($this->getUser()->getApp()->resourceActions, true);
+        $resourceManager = $this->container->get('huh.api.manager.resource');
 
-        if (empty($allowed)) {
-            return false;
-        }
+        switch ($app->type) {
+            case $resourceManager::TYPE_ENTITY_RESOURCE:
+                if (null === ($action = $this->container->get('huh.utils.model')->findOneModelInstanceBy('tl_api_app_action',
+                        ['tl_api_app_action.pid=?', 'tl_api_app_action.type=?'], [$app->id, $request->attributes->get('_route')]))) {
+                    return false;
+                }
 
-        if (!\in_array($request->attributes->get('_route'), $allowed)) {
-            return false;
+                break;
+
+            default:
+                $allowed = StringUtil::deserialize($app->resourceActions, true);
+
+                if (!\in_array($request->attributes->get('_route'), $allowed)) {
+                    return false;
+                }
+
+                break;
         }
 
         return true;

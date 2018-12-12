@@ -5,57 +5,74 @@ services:
   _instanceof:
     Contao\CoreBundle\Framework\FrameworkAwareInterface:
       calls:
-      - ["setFramework", ["@contao.framework"]]
+        - ["setFramework", ["@contao.framework"]]
     Symfony\Component\DependencyInjection\ContainerAwareInterface:
       calls:
-      - ["setContainer", ["@service_container"]]
+        - ["setContainer", ["@service_container"]]
   huh.api.backend.api_app:
     public: true
     class: HeimrichHannot\ApiBundle\Backend\ApiApp
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
   huh.api.routing.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
-    - ["matchAttribute", ["_scope", "api"]]
+      - ["matchAttribute", ["_scope", "api"]]
   huh.api.routing.login.member.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
-    - ["matchAttribute", ["_scope", "api_login_member"]]
+      - ["matchAttribute", ["_scope", "api_login_member"]]
   huh.api.routing.login.user.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
-    - ["matchAttribute", ["_scope", "api_login_user"]]
+      - ["matchAttribute", ["_scope", "api_login_user"]]
   huh.api.jwt_coder:
     class: HeimrichHannot\ApiBundle\Security\JWTCoder
     arguments:
-    - "%secret%"
+      - "%secret%"
   huh.api.security.token_authenticator:
     class:  HeimrichHannot\ApiBundle\Security\TokenAuthenticator
     arguments:
-    - "@contao.framework"
-    - "@huh.api.jwt_coder"
-    - "@translator"
+      - "@contao.framework"
+      - "@huh.api.jwt_coder"
+      - "@translator"
   huh.api.security.user_provider:
     class: HeimrichHannot\ApiBundle\Security\User\UserProvider
     arguments:
-    - "@contao.framework"
-    - "@translator"
+      - "@contao.framework"
+      - "@translator"
   huh.api.security.username_password_authenticator:
     class: HeimrichHannot\ApiBundle\Security\UsernamePasswordAuthenticator
     arguments:
-    - "@contao.framework"
-    - "@huh.api.jwt_coder"
-    - "@translator"
+      - "@contao.framework"
+      - "@huh.api.jwt_coder"
+      - "@translator"
   huh.api.manager.resource:
     class: HeimrichHannot\ApiBundle\Manager\ApiResourceManager
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
+  huh.api.resource.default:
+    class: HeimrichHannot\ApiBundle\ApiResource\CalendarEventResource
+    arguments:
+      - "calendar_event"
+    tags:
+      - { name: huh.api.resource, alias: default}
+  huh.api.resource.calendar_event:
+    class: HeimrichHannot\ApiBundle\ApiResource\CalendarEventResource
+    arguments:
+      - "calendar_event"
+    tags:
+      - { name: huh.api.resource, alias: calendar_event}
   huh.api.resource.member:
     class: HeimrichHannot\ApiBundle\ApiResource\MemberResource
+    arguments:
+      - "member"
     tags:
-    - { name: huh.api.resource, alias: member}
+      - { name: huh.api.resource, alias: member}
   huh.api.model.app:
     class: HeimrichHannot\ApiBundle\Model\ApiAppModel
     public: true
     shared: false
+  huh.api.util.api_util:
+    class: HeimrichHannot\ApiBundle\Util\ApiUtil
+    public: true

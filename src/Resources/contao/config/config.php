@@ -9,7 +9,7 @@ array_insert(
     [
         'api' => [
             'api_apps' => [
-                'tables' => ['tl_api_app'],
+                'tables' => ['tl_api_app', 'tl_api_app_action'],
             ],
         ],
     ]
@@ -18,4 +18,5 @@ array_insert(
 /**
  * Models
  */
-$GLOBALS['TL_MODELS']['tl_api_app'] = 'HeimrichHannot\ApiBundle\Model\ApiAppModel';
+$GLOBALS['TL_MODELS']['tl_api_app']        = 'HeimrichHannot\ApiBundle\Model\ApiAppModel';
+$GLOBALS['TL_MODELS']['tl_api_app_action'] = 'HeimrichHannot\ApiBundle\Model\ApiAppActionModel';

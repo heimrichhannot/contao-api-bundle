@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ApiBundle\Security\User;
 
 use Contao\Model;
+use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
 use HeimrichHannot\ApiBundle\Model\ApiAppModel;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -110,6 +111,22 @@ interface UserInterface extends AdvancedUserInterface
      * @return ApiAppModel|null
      */
     public function getApp(): ?ApiAppModel;
+
+    /**
+     * Set active app action model.
+     *
+     * @param ApiAppModel $model
+     *
+     * @return mixed
+     */
+    public function setAppAction(ApiAppActionModel $model);
+
+    /**
+     * Get active app action model.
+     *
+     * @return ApiAppModel|null
+     */
+    public function getAppAction(): ?ApiAppActionModel;
 
     /**
      * Get the model table.

@@ -9,9 +9,11 @@
 namespace HeimrichHannot\ApiBundle\Backend;
 
 use Contao\BackendUser;
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\DataContainer;
+use Contao\Image;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ApiBundle\Model\ApiAppModel;
@@ -26,6 +28,18 @@ class ApiApp
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
+    }
+
+    public function editButton($row, $href, $label, $title, $icon, $attributes)
+    {
+        $resourceManager = System::getContainer()->get('huh.api.manager.resource');
+
+        switch ($row['type']) {
+            case $resourceManager::TYPE_ENTITY_RESOURCE:
+                return '<a href="'.Controller::addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
+        }
+
+        return '';
     }
 
     public function generateApiToken($value, DataContainer $dc)
@@ -79,18 +93,22 @@ class ApiApp
             case 'select':
                 // Allow
                 break;
+
             case 'edit':
                 // Dynamically add the record to the user profile
                 if (!\in_array(\Input::get('id'), $root)) {
                     /** @var \Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $sessionBag */
                     $sessionBag = $objSession->getBag('contao_backend');
                     $arrNew = $sessionBag->get('new_records');
+
                     if (\is_array($arrNew['tl_api_app']) && \in_array(System::getContainer()->get('huh.request')->get('id'), $arrNew['tl_api_app'])) {
                         // Add the permissions on group level
                         if ('custom' != $user->inherit) {
                             $objGroup = $database->execute('SELECT id, apis, apip FROM tl_user_group WHERE id IN('.implode(',', array_map('intval', $user->groups)).')');
+
                             while ($objGroup->next()) {
                                 $arrModulep = StringUtil::deserialize($objGroup->apip);
+
                                 if (\is_array($arrModulep) && \in_array('create', $arrModulep)) {
                                     $arrModules = StringUtil::deserialize($objGroup->apis, true);
                                     $arrModules[] = System::getContainer()->get('huh.request')->get('id');
@@ -102,6 +120,7 @@ class ApiApp
                         if ('group' != $user->inherit) {
                             $user = $database->prepare('SELECT apis, apip FROM tl_user WHERE id=?')->limit(1)->execute($user->id);
                             $arrModulep = StringUtil::deserialize($user->apip);
+
                             if (\is_array($arrModulep) && \in_array('create', $arrModulep)) {
                                 $arrModules = StringUtil::deserialize($user->apis, true);
                                 $arrModules[] = System::getContainer()->get('huh.request')->get('id');
@@ -122,10 +141,12 @@ class ApiApp
                 }
 
                 break;
+
             case 'editAll':
             case 'deleteAll':
             case 'overrideAll':
                 $session = $objSession->all();
+
                 if ('deleteAll' == System::getContainer()->get('huh.request')->get('act') && !$user->hasAccess('delete', 'apip')) {
                     $session['CURRENT']['IDS'] = [];
                 } else {
@@ -134,6 +155,7 @@ class ApiApp
                 $objSession->replace($session);
 
                 break;
+
             default:
                 if (\strlen(System::getContainer()->get('huh.request')->get('act'))) {
                     throw new \Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to '.System::getContainer()->get('huh.request')->get('act').' privacy API apps.');
