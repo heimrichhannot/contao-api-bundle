@@ -9,8 +9,6 @@ All notable changes to this project will be documented in this file.
 #### Added
 - tl_api_app_action entity for handling action specific configuration
 
-## [1.0.3] - 2018-12-10
-
 #### Removed
 - urodoz/truncate-html from dependencies
 
