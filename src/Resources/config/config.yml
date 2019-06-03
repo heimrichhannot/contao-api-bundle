@@ -4,4 +4,3 @@ huh:
       - {name: default, type: resource}
       - {name: calendar_event, type: entity_resource, modelClass: "\\Contao\\CalendarEventsModel", verboseName: calendar_event}
       - {name: member, type: entity_resource, modelClass: "\\Contao\\MemberModel", verboseName: member}
-      - {name: my_resource, type: entity_resource, modelClass: "MyResourceModel", verboseName: my_resource}

@@ -76,9 +76,3 @@ services:
   huh.api.util.api_util:
     class: HeimrichHannot\ApiBundle\Util\ApiUtil
     public: true
-  huh.api.resource.my_resource:
-    class: HeimrichHannot\ApiBundle\ApiResource\MyResource
-    arguments:
-      - "my_resource"
-    tags:
-      - { name: huh.api.resource, alias: my_resource}

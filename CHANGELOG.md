@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.1] - 2019-06-03
+
+#### Fixed
+- missing documentation to add custom resource (#4)
+- `tl_api_app` toggleIcon missing implementation (#3)
+- `tl_api_app_action` options_callback error fixed (#5) 
+
 ## [2.0.0] - 2018-12-12
 
 #### Changed
