@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
                 'label'           => &$GLOBALS['TL_LANG']['tl_api_app']['toggle'],
                 'icon'            => 'visible.gif',
                 'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-                'button_callback' => ['huh.filter.backend.filter_config_element', 'toggleIcon'],
+                'button_callback' => ['huh.api.backend.api_app', 'toggleIcon'],
             ],
             'show'       => [
                 'label' => &$GLOBALS['TL_LANG']['tl_api_app']['show'],

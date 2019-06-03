@@ -164,4 +164,105 @@ class ApiApp
                 break;
         }
     }
+    public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+    {
+        $user = \Contao\BackendUser::getInstance();
+
+        if (strlen(\Contao\Input::get('tid'))) {
+            $this->toggleVisibility(\Contao\Input::get('tid'), (\Contao\Input::get('state') === '1'), (@func_get_arg(12) ?: null));
+            Controller::redirect(\System::getReferer());
+        }
+
+        // Check permissions AFTER checking the tid, so hacking attempts are logged
+        if (!$user->hasAccess('tl_api_app::published', 'alexf')) {
+            return '';
+        }
+
+        $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] === '1' ? '' : 1);
+
+        if ($row['published'] !== '1') {
+            $icon = 'invisible.svg';
+        }
+
+        return '<a href="' . Controller::addToUrl($href) . '&rt=' . \RequestToken::get() . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label, 'data-state="' . ($row['published'] === '1' ? 1 : 0) . '"') . '</a> ';
+    }
+
+    public function toggleVisibility($intId, $blnVisible, \DataContainer $dc = null)
+    {
+        $user     = \Contao\BackendUser::getInstance();
+        $database = \Contao\Database::getInstance();
+
+        // Set the ID and action
+        \Contao\Input::setGet('id', $intId);
+        \Contao\Input::setGet('act', 'toggle');
+
+        if ($dc) {
+            $dc->id = $intId; // see #8043
+        }
+
+        // Trigger the onload_callback
+        if (is_array($GLOBALS['TL_DCA']['tl_api_app']['config']['onload_callback'])) {
+            foreach ($GLOBALS['TL_DCA']['tl_api_app']['config']['onload_callback'] as $callback) {
+                if (is_array($callback)) {
+                    System::importStatic($callback[0])->{$callback[1]}($dc);
+                } elseif (is_callable($callback)) {
+                    $callback($dc);
+                }
+            }
+        }
+
+        // Check the field access
+        if (!$user->hasAccess('tl_api_app::published', 'alexf')) {
+            throw new \Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish api_app item ID ' . $intId . '.');
+        }
+
+        // Set the current record
+        if ($dc) {
+            $objRow = $database->prepare("SELECT * FROM tl_api_app WHERE id=?")
+                ->limit(1)
+                ->execute($intId);
+
+            if ($objRow->numRows) {
+                $dc->activeRecord = $objRow;
+            }
+        }
+
+        $objVersions = new \Versions('tl_api_app', $intId);
+        $objVersions->initialize();
+
+        // Trigger the save_callback
+        if (is_array($GLOBALS['TL_DCA']['tl_api_app']['fields']['published']['save_callback'])) {
+            foreach ($GLOBALS['TL_DCA']['tl_api_app']['fields']['published']['save_callback'] as $callback) {
+                if (is_array($callback)) {
+                    $blnVisible = System::importStatic($callback[0])->{$callback[1]}($blnVisible, $dc);
+                } elseif (is_callable($callback)) {
+                    $blnVisible = $callback($blnVisible, $dc);
+                }
+            }
+        }
+
+        $time = time();
+
+        // Update the database
+        $database->prepare("UPDATE tl_api_app SET tstamp=$time, published='" . ($blnVisible ? '1' : "''") . "' WHERE id=?")
+            ->execute($intId);
+
+        if ($dc) {
+            $dc->activeRecord->tstamp    = $time;
+            $dc->activeRecord->published = ($blnVisible ? '1' : '');
+        }
+
+        // Trigger the onsubmit_callback
+        if (is_array($GLOBALS['TL_DCA']['tl_api_app']['config']['onsubmit_callback'])) {
+            foreach ($GLOBALS['TL_DCA']['tl_api_app']['config']['onsubmit_callback'] as $callback) {
+                if (is_array($callback)) {
+                    System::importStatic($callback[0])->{$callback[1]}($dc);
+                } elseif (is_callable($callback)) {
+                    $callback($dc);
+                }
+            }
+        }
+
+        $objVersions->create();
+    }
 }
