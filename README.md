@@ -44,9 +44,48 @@ To add your custom resource, simply add an service within your bundles or app `s
 services:
 	my.api.resource.my_resource:
 		class: MyApi\Resource\MyResource
+		arguments:
+              - "my_resource"
 		tags:
 		- { name: huh.api.resource, alias: my_resource}
 ```
+
+And register your resource configuration within your bundles or app `config.yml`:
+
+```
+huh:
+  api:
+    resources:
+      - {name: my_resource, type: entity_resource, modelClass: "MyResourceModel", verboseName: my_resource}
+```
+
+To get your `config.yml` loaded properly, your `Plugin` class must implement the interface `Contao\ManagerPlugin\Config\ExtensionPluginInterface`:
+
+```
+namespace MyApi\ContaoManager;
+
+use Contao\ManagerPlugin\Config\ContainerBuilder;
+use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
+use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
+
+class Plugin implements ExtensionPluginInterface
+{
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
+    {
+        return ContainerUtil::mergeConfigFile(
+            'huh_api',
+            $extensionName,
+            $extensionConfigs,
+            __DIR__.'/../Resources/config/config.yml'
+        );
+    }
+```
+
+**Do not forget to clear the symfony cache afterwards!**
 
 Now you are able to access your resource through `/api/resource/my_resource`.
 
