@@ -146,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_api_app_action']['limitFormattedFields'],
             'exclude'   => true,
             'inputType' => 'checkbox',
-            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'eval'      => ['tl_class' => 'clr w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''",
         ],
         'limitedFormattedFields'   => [
@@ -161,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
                     return [];
                 }
 
-                return System::getContainer()->get('huh.api.util.api_util')->getResourceFieldOptions($dc->activeRecord->resource);
+                return System::getContainer()->get('huh.api.util.api_util')->getResourceFieldOptions($app->resource);
             },
             'exclude'          => true,
             'eval'             => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 clr autoheight'],
@@ -255,7 +255,7 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
             'eval'      => [
                 'includeBlankOption' => true,
                 'chosen'             => true,
-                'tl_class'           => 'w50'
+                'tl_class'           => 'clr w50'
             ],
             'sql'       => "varchar(16) NOT NULL default ''",
         ],
