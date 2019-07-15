@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] - 2019-07-15
+
+#### Fixed
+- services not public (#2) - thx to seibtph
+
 ## [2.0.1] - 2019-06-03
 
 #### Fixed
