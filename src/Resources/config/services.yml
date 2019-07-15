@@ -49,6 +49,7 @@ services:
       - "@translator"
   huh.api.manager.resource:
     class: HeimrichHannot\ApiBundle\Manager\ApiResourceManager
+    public: true
     arguments:
       - "@contao.framework"
   huh.api.resource.default:
