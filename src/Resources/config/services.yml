@@ -2,6 +2,8 @@ parameters:
   huh.api.entity.user: HeimrichHannot\ApiBundle\Entity\User
   huh.api.entity.member: HeimrichHannot\ApiBundle\Entity\Member
 services:
+  _defaults:
+    public: true
   _instanceof:
     Contao\CoreBundle\Framework\FrameworkAwareInterface:
       calls:

@@ -6,7 +6,6 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "^4.4",
-        "symfony/framework-bundle": "^3.4",
         "heimrichhannot/contao-categories-bundle": "^1.0-beta",
         "firebase/php-jwt": "^4.0"
     },

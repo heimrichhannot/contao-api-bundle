@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2020-10-27
+
+#### Fixed
+- symfony 4 compatibility
+
 ## [2.0.2] - 2019-07-15
 
 #### Fixed
