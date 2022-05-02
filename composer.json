@@ -4,7 +4,7 @@
     "description": "A generic API with restricted access to provide access to 3rd party applications.",
     "license": "LGPL-3.0-or-later",
     "require": {
-        "php": "^7.1",
+        "php": "^7.1 || ^8.0",
         "contao/core-bundle": "^4.4",
         "heimrichhannot/contao-categories-bundle": "^1.0-beta",
         "firebase/php-jwt": "^4.0"
