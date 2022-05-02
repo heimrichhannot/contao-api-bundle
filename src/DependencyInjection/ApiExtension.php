@@ -1,13 +1,14 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\DependencyInjection;
 
+use HeimrichHannot\CategoriesBundle\CategoriesBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -36,6 +37,10 @@ class ApiExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('services.yml');
-        $loader->load('listeners.yml');
+        $loader->load('parameters.yml');
+
+        if (!class_exists(CategoriesBundle::class)) {
+            $container->removeDefinition(CategoriesBundle::class);
+        }
     }
 }

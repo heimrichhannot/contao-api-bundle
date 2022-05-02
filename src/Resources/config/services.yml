@@ -1,9 +1,7 @@
-parameters:
-  huh.api.entity.user: HeimrichHannot\ApiBundle\Entity\User
-  huh.api.entity.member: HeimrichHannot\ApiBundle\Entity\Member
 services:
   _defaults:
     public: true
+
   _instanceof:
     Contao\CoreBundle\Framework\FrameworkAwareInterface:
       calls:
@@ -11,6 +9,13 @@ services:
     Symfony\Component\DependencyInjection\ContainerAwareInterface:
       calls:
         - ["setContainer", ["@service_container"]]
+
+
+  HeimrichHannot\ApiBundle\EventListener\:
+    resource: '../../EventListener/*'
+    autowire: true
+    autoconfigure: true
+
   huh.api.backend.api_app:
     public: true
     class: HeimrichHannot\ApiBundle\Backend\ApiApp

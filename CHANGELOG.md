@@ -2,10 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - 2022-05-02
-- Fixed: dca issues
+- Changed: minimum supported contao version is now 4.9
+- Changed: make categories bundle optional
 - Changed: allow php 8
-- Fixed: syntax error exception
 - Changed: allow firebase/php-jwt v5
+- Fixed: dca issues
+- Fixed: syntax error exception
+- Fixed: missing utils bundle dependency
+- Fixed: missing symfony/config dependency
 
 ## [2.1.0] - 2020-10-27
 

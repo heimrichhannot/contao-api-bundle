@@ -37,7 +37,6 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
             'disableGrouping' => true,
             'headerFields' => ['title', 'tstamp'],
             'panelLayout' => 'filter;sort,search,limit',
-            'child_record_callback' => ['huh.api.event_listener.data_container.api_app_action_listener', 'listChildren'],
         ],
         'global_operations' => [
             'all' => [
