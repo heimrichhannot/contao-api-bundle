@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -19,8 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class EntityResource implements ResourceInterface
 {
-    use FrameworkAwareTrait;
     use ContainerAwareTrait;
+    use FrameworkAwareTrait;
 
     protected $resourceName;
     protected $modelClass;
@@ -119,8 +119,8 @@ abstract class EntityResource implements ResourceInterface
 
         $options = [];
 
-        /** @var Model $adapter */
-        $adapter = $this->framework->getAdapter($this->modelClass);
+        /** @var Model $modelAdapter */
+        $modelAdapter = $this->framework->getAdapter($this->modelClass);
 
         if (0 < ($limit = (int) $request->query->get('limit'))) {
             $options['limit'] = $limit;
@@ -135,14 +135,18 @@ abstract class EntityResource implements ResourceInterface
         $this->hideUnpublishedInstances($user, $columns);
         $this->applyWhereSql($user, $columns);
 
-        if (1 > ($total = $adapter->countBy($columns))) {
+        if (\count($columns) < 1) {
+            $columns = null;
+        }
+
+        if (1 > ($total = $modelAdapter->countBy($columns))) {
             return [
                 'message' => $this->container->get('translator')->trans('huh.api.message.resource.none_existing', ['%resource%' => $this->verboseName]),
             ];
         }
 
         /** @var Model $model */
-        $models = $adapter->findBy($columns, [], $options);
+        $models = $modelAdapter->findBy($columns, [], $options);
 
         // prepare data
         $output = $this->prepareInstances($models, $request, $user);
