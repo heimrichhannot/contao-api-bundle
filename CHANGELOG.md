@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Fixed: dca issues
 - Changed: allow php 8
 - Fixed: syntax error exception
+- Changed: allow firebase/php-jwt v5
 
 ## [2.1.0] - 2020-10-27
 
