@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Fixed: syntax error exception
 - Fixed: missing utils bundle dependency
 - Fixed: missing symfony/config dependency
+- Fixed: dca issue in tl_api_app ([#7])
 
 ## [2.1.0] - 2020-10-27
 
@@ -56,3 +57,7 @@ All notable changes to this project will be documented in this file.
 
 #### Added
 - initial version of rest api with login, token handling and resource support including `tl_member` skeleton resource
+
+
+
+[#7]: https://github.com/heimrichhannot/contao-api-bundle/issues/7

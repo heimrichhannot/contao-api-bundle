@@ -101,12 +101,10 @@ $GLOBALS['TL_DCA']['tl_api_app'] = [
             'sql' => "varchar(64) NOT NULL default ''",
         ],
         'dateAdded' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_api_app']['dateAdded'],
             'sorting' => true,
-            'flag' => 7,
-            'inputType' => 'text',
-            'eval' => ['rgxp' => 'datim', 'datepicker' => true, 'timepicker' => true, 'doNotCopy' => true, 'mandatory' => true, 'tl_class' => 'w50'],
-            'sql' => "varchar(64) NOT NULL default ''",
+            'flag' => 6,
+            'eval' => ['rgxp' => 'datim', 'doNotCopy' => true],
+            'sql' => "int(10) unsigned NOT NULL default '0'",
         ],
         'type' => [
             'label' => &$GLOBALS['TL_LANG']['tl_api_app']['type'],
