@@ -1,12 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2022-05-02
+## [2.2.0] - 2022-05-02
 - Changed: minimum supported contao version is now 4.9
-- Changed: make categories bundle optional
+- Changed: make categories bundle optional ([#8])
 - Changed: allow php 8
-- Changed: allow firebase/php-jwt v5
-- Fixed: dca issues
+- Changed: allow firebase/php-jwt v5 ([#12])
+- Fixed: invalid ctable config
 - Fixed: syntax error exception
 - Fixed: missing utils bundle dependency
 - Fixed: missing symfony/config dependency
@@ -60,4 +60,6 @@ All notable changes to this project will be documented in this file.
 
 
 
+[#12]: https://github.com/heimrichhannot/contao-api-bundle/issues/12
+[#8]: https://github.com/heimrichhannot/contao-api-bundle/issues/8
 [#7]: https://github.com/heimrichhannot/contao-api-bundle/issues/7
