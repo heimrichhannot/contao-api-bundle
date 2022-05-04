@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] - 2022-05-04
+- Fixed: uitls bundle dependency
+
 ## [2.2.0] - 2022-05-02
 - Changed: minimum supported contao version is now 4.9
 - Changed: make categories bundle optional ([#8])
