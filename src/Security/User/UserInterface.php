@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -11,28 +11,21 @@ namespace HeimrichHannot\ApiBundle\Security\User;
 use Contao\Model;
 use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
 use HeimrichHannot\ApiBundle\Model\ApiAppModel;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 interface UserInterface extends AdvancedUserInterface
 {
     /**
      * Set current contao member model.
-     *
-     * @param Model $model
      */
     public function setModel(Model $model);
 
     /**
      * Get the current contao member model.
-     *
-     * @return Model
      */
     public function getModel(): Model;
 
     /**
      * Set login count.
-     *
-     * @param int $loginCount
      *
      * @return mixed
      */
@@ -40,15 +33,11 @@ interface UserInterface extends AdvancedUserInterface
 
     /**
      * Get current login count.
-     *
-     * @return int
      */
     public function getLoginCount(): int;
 
     /**
      * Set last login time.
-     *
-     * @param int $lastLogin
      *
      * @return mixed
      */
@@ -56,15 +45,11 @@ interface UserInterface extends AdvancedUserInterface
 
     /**
      * Get last login time.
-     *
-     * @return int
      */
     public function getLastLogin(): int;
 
     /**
      * Set current login time.
-     *
-     * @param int $currentLogin
      *
      * @return mixed
      */
@@ -72,8 +57,6 @@ interface UserInterface extends AdvancedUserInterface
 
     /**
      * Get current login time.
-     *
-     * @return int
      */
     public function getCurrentLogin(): int;
 
@@ -89,17 +72,11 @@ interface UserInterface extends AdvancedUserInterface
 
     /**
      * Check if user has access to current app.
-     *
-     * @param ApiAppModel $model
-     *
-     * @return bool
      */
     public function hasAppAccess(ApiAppModel $model): bool;
 
     /**
      * Set active app model.
-     *
-     * @param ApiAppModel $model
      *
      * @return mixed
      */
@@ -107,8 +84,6 @@ interface UserInterface extends AdvancedUserInterface
 
     /**
      * Get active app model.
-     *
-     * @return ApiAppModel|null
      */
     public function getApp(): ?ApiAppModel;
 
@@ -130,8 +105,6 @@ interface UserInterface extends AdvancedUserInterface
 
     /**
      * Get the model table.
-     *
-     * @return string
      */
     public function getModelTable(): string;
 }
