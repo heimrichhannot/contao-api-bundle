@@ -1,14 +1,14 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ApiBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api",defaults={"_format": "json","_token_check"=false})
  */
-class LoginController extends Controller
+class LoginController extends AbstractController
 {
     /**
      * @return Response

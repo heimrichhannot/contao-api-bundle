@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - 2022-05-05
-- Fixed: missing AdvancedUserInterface in symfony 5
+- Fixed: incompatibilities with symfony 5
 
 ## [2.2.1] - 2022-05-04
 - Fixed: uitls bundle dependency

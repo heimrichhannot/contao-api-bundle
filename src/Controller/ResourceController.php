@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -10,7 +10,7 @@ namespace HeimrichHannot\ApiBundle\Controller;
 
 use Contao\StringUtil;
 use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,11 +18,9 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api",defaults={"_scope"="api","_token_check"=false})
  */
-class ResourceController extends Controller
+class ResourceController extends AbstractController
 {
     /**
-     * @param string $alias
-     *
      * @return Response
      *
      * @Route("/resource/{alias}", name="api_resource_create", methods={"POST"})
@@ -42,8 +40,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @param string $alias
-     * @param mixed  $id    Entity id
+     * @param mixed $id Entity id
      *
      * @return Response
      *
@@ -64,8 +61,6 @@ class ResourceController extends Controller
     }
 
     /**
-     * @param string $alias
-     *
      * @return Response
      *
      * @Route("/resource/{alias}", name="api_resource_list", methods={"GET"})
@@ -85,8 +80,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @param string $alias
-     * @param mixed  $id    Entity id
+     * @param mixed $id Entity id
      *
      * @return Response
      *
@@ -107,8 +101,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @param string $alias
-     * @param mixed  $id    Entity id
+     * @param mixed $id Entity id
      *
      * @return Response
      *
@@ -130,10 +123,6 @@ class ResourceController extends Controller
 
     /**
      * Determine if action is allowed.
-     *
-     * @param Request $request
-     *
-     * @return bool
      */
     protected function isActionAllowed(Request $request): bool
     {
