@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Guard\AbstractGuardAuthenticator implements ContainerAwareInterface
 {
@@ -39,9 +39,6 @@ abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Gu
 
     /**
      * TokenAuthenticator constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param JWTCoder                 $jwtCoder
      */
     public function __construct(ContaoFrameworkInterface $framework, JWTCoder $jwtCoder, TranslatorInterface $translator)
     {
