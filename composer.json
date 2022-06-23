@@ -44,9 +44,6 @@
             "HeimrichHannot\\ApiBundle\\Test\\": "tests/"
         }
     },
-    "config": {
-        "preferred-install": "dist"
-    },
     "extra": {
         "contao-manager-plugin": "HeimrichHannot\\ApiBundle\\ContaoManager\\Plugin"
     }

@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2022-06-23
+- Fixed: class load error 
+
 ## [2.2.3] - 2022-05-06
 - Fixed: incompatibilities with symfony 5
 - 

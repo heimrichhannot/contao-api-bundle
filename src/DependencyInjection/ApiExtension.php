@@ -40,7 +40,7 @@ class ApiExtension extends Extension
         $loader->load('parameters.yml');
 
         if (!class_exists(CategoriesBundle::class)) {
-            $container->removeDefinition(CategoriesBundle::class);
+            $container->removeDefinition('HeimrichHannot\ApiBundle\EventListener\CategoriesListener');
         }
     }
 }
