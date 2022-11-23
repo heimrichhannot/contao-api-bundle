@@ -1,8 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2022-06-23
-- Fixed: class load error 
+## [2.2.4] - 2022-11-23
+- Fixed: class load error ([#15])
+- Fixed: error if Accept-Language header is missing ([#18], thanks to [@fritzmg])
+- Fixed: placeholders not correctly replaces in some translations ([#10], thanks to [@srhinow])
 
 ## [2.2.3] - 2022-05-06
 - Fixed: incompatibilities with symfony 5
@@ -70,8 +72,11 @@ All notable changes to this project will be documented in this file.
 #### Added
 - initial version of rest api with login, token handling and resource support including `tl_member` skeleton resource
 
-
-
+[@fritzmg]: https://github.com/fritzmg
+[@srhinow]: https://github.com/srhinow
+[#18]: https://github.com/heimrichhannot/contao-api-bundle/pull/18
+[#10]: https://github.com/heimrichhannot/contao-api-bundle/pull/10
+[#15]: https://github.com/heimrichhannot/contao-api-bundle/issues/15
 [#12]: https://github.com/heimrichhannot/contao-api-bundle/issues/12
 [#8]: https://github.com/heimrichhannot/contao-api-bundle/issues/8
 [#7]: https://github.com/heimrichhannot/contao-api-bundle/issues/7
