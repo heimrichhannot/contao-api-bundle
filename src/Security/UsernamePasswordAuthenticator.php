@@ -22,7 +22,9 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        $this->translator->setLocale($request->getPreferredLanguage());
+        if (null !== ($locale = $request->getPreferredLanguage())) {
+            $this->translator->setLocale($locale);
+        }
 
         if ('POST' !== $request->getMethod()) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.post_method_only'));
