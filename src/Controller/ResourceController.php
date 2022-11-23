@@ -29,7 +29,7 @@ class ResourceController extends AbstractController
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias' => $alias])]);
+            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
@@ -50,7 +50,7 @@ class ResourceController extends AbstractController
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias' => $alias])]);
+            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
@@ -69,7 +69,7 @@ class ResourceController extends AbstractController
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias' => $alias])]);
+            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
@@ -90,7 +90,7 @@ class ResourceController extends AbstractController
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias' => $alias])]);
+            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
@@ -111,7 +111,7 @@ class ResourceController extends AbstractController
     {
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias' => $alias])]);
+            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
