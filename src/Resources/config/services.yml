@@ -11,10 +11,11 @@ services:
         - ["setContainer", ["@service_container"]]
 
 
-  HeimrichHannot\ApiBundle\EventListener\:
-    resource: '../../EventListener/*'
+  HeimrichHannot\ApiBundle\:
+    resource: '../../{Controller,EventListener}/*'
     autowire: true
     autoconfigure: true
+    public: false
 
   huh.api.backend.api_app:
     public: true
@@ -33,10 +34,13 @@ services:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
       - ["matchAttribute", ["_scope", "api_login_user"]]
+
   huh.api.jwt_coder:
     class: HeimrichHannot\ApiBundle\Security\JWTCoder
     arguments:
       - "%secret%"
+  HeimrichHannot\ApiBundle\Security\JWTCoder: '@huh.api.jwt_coder'
+
   huh.api.security.token_authenticator:
     class:  HeimrichHannot\ApiBundle\Security\TokenAuthenticator
     arguments:

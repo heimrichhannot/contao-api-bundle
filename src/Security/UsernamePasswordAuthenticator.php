@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -42,7 +42,11 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        return $userProvider->loadUserByUsername($credentials);
+        if (method_exists($userProvider, 'loadUserByIdentifier')) {
+            return $userProvider->loadUserByIdentifier($credentials['username']);
+        }
+
+        return $userProvider->loadUserByUsername($credentials['username']);
     }
 
     /**
@@ -54,11 +58,11 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
     {
         $time = time();
         $authenticated = password_verify($credentials['password'], $user->getPassword());
-        $needsRehash = password_needs_rehash($user->getPassword(), PASSWORD_DEFAULT);
+        $needsRehash = password_needs_rehash($user->getPassword(), \PASSWORD_DEFAULT);
 
         // Re-hash the password if the algorithm has changed
         if ($authenticated && $needsRehash) {
-            $this->password = password_hash($credentials['password'], PASSWORD_DEFAULT);
+            $this->password = password_hash($credentials['password'], \PASSWORD_DEFAULT);
         }
 
         // HOOK: pass credentials to callback functions
@@ -86,10 +90,10 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
-        $user->setLastLogin($user->getCurrentLogin());
-        $user->setCurrentLogin($time);
-        $user->setLoginCount((int) $config->get('loginCount'));
-        $user->getModel()->save();
+        $user->lastLogin = $user->currentLogin;
+        $user->currentLogin = $time;
+        $user->loginCount = (int) $config->get('loginCount');
+        $user->save();
 
         return true;
     }

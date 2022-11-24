@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\ApiBundle\Controller;
 
+use HeimrichHannot\ApiBundle\Security\JWTCoder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class LoginController extends AbstractController
 {
+    private JWTCoder $jwtCoder;
+
+    public function __construct(JWTCoder $jwtCoder)
+    {
+        $this->jwtCoder = $jwtCoder;
+    }
+
     /**
      * @return Response
      *
@@ -26,30 +34,36 @@ class LoginController extends AbstractController
      */
     public function loginMemberAction(Request $request)
     {
-        $token = $this->get('huh.api.jwt_coder')->encode(
-            [
-                'entity' => 'huh.api.entity.member',
-                'username' => $this->getUser()->getUsername(),
-            ]
-        );
+        $tokenData = [
+            'entity' => 'huh.api.entity.member',
+        ];
 
-        return new JsonResponse(['token' => $token]);
+        if (method_exists($this->getUser(), 'getUserIdentifier')) {
+            $tokenData['username'] = $this->getUser()->getUserIdentifier();
+        } else {
+            $tokenData['username'] = $this->getUser()->getUsername();
+        }
+
+        return new JsonResponse(['token' => $this->jwtCoder->encode($tokenData)]);
     }
 
     /**
      * @return Response
      *
-     * @Route("/login/user", name="api_login_user", methods={"POST"}, defaults={"_scope"="api_login_user", "_entity"="huh.api.entity.user"})
+     * @Route("/login/user", name="api_login_user", methods={"POST"}, defaults={"_scope"="api_login_user"})
      */
     public function loginUserAction(Request $request)
     {
-        $token = $this->get('huh.api.jwt_coder')->encode(
-            [
-                'entity' => 'huh.api.entity.user',
-                'username' => $this->getUser()->getUsername(),
-            ]
-        );
+        $tokenData = [
+            'entity' => 'huh.api.entity.user',
+        ];
 
-        return new JsonResponse(['token' => $token]);
+        if (method_exists($this->getUser(), 'getUserIdentifier')) {
+            $tokenData['username'] = $this->getUser()->getUserIdentifier();
+        } else {
+            $tokenData['username'] = $this->getUser()->getUsername();
+        }
+
+        return new JsonResponse(['token' => $this->jwtCoder->encode($tokenData)]);
     }
 }

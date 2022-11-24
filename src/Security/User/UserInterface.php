@@ -12,7 +12,7 @@ use Contao\Model;
 use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
 use HeimrichHannot\ApiBundle\Model\ApiAppModel;
 
-interface UserInterface extends AdvancedUserInterface
+interface UserInterface extends AdvancedUserInterface, \Symfony\Component\Security\Core\User\UserInterface
 {
     /**
      * Set current contao member model.

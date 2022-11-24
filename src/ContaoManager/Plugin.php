@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -25,8 +25,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
 {
     /**
      * Gets a list of autoload configurations for this bundle.
-     *
-     * @param ParserInterface $parser
      *
      * @return ConfigInterface[]
      */
@@ -73,9 +71,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
     /**
      * Get security extension config.
      *
-     * @param array            $extensionConfigs
-     * @param ContainerBuilder $container
-     *
      * @return array
      */
     public function getSecurityExtensionConfig(array $extensionConfigs, ContainerBuilder $container)
@@ -95,7 +90,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
                 'guard' => [
                     'authenticators' => ['huh.api.security.username_password_authenticator'],
                 ],
-                'provider' => 'huh.api.security.user_provider',
+                'provider' => 'contao.security.backend_user_provider',
             ],
             'api' => [
                 'request_matcher' => 'huh.api.routing.matcher',
