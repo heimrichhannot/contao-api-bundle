@@ -81,8 +81,8 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         }
 
         if (!$authenticated) {
-            $user->setLoginCount($user->getLoginCount() - 1);
-            $user->getModel()->save();
+            $user->loginCount = ($user->loginCount - 1);
+            $user->save();
 
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_credentials'));
         }

@@ -82,7 +82,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
                 'guard' => [
                     'authenticators' => ['huh.api.security.username_password_authenticator'],
                 ],
-                'provider' => 'huh.api.security.user_provider',
+                'provider' => 'contao.security.frontend_user_provider',
             ],
             'api_login_user' => [
                 'request_matcher' => 'huh.api.routing.login.user.matcher',
