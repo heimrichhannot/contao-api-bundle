@@ -34,17 +34,7 @@ class LoginController extends AbstractController
      */
     public function loginMemberAction(Request $request)
     {
-        $tokenData = [
-            'entity' => 'huh.api.entity.member',
-        ];
-
-        if (method_exists($this->getUser(), 'getUserIdentifier')) {
-            $tokenData['username'] = $this->getUser()->getUserIdentifier();
-        } else {
-            $tokenData['username'] = $this->getUser()->getUsername();
-        }
-
-        return new JsonResponse(['token' => $this->jwtCoder->encode($tokenData)]);
+        return new JsonResponse(['token' => $this->getToken('huh.api.entity.member')]);
     }
 
     /**
@@ -54,8 +44,13 @@ class LoginController extends AbstractController
      */
     public function loginUserAction(Request $request)
     {
+        return new JsonResponse(['token' => $this->getToken('huh.api.entity.user')]);
+    }
+
+    private function getToken(string $entity): string
+    {
         $tokenData = [
-            'entity' => 'huh.api.entity.user',
+            'entity' => $entity,
         ];
 
         if (method_exists($this->getUser(), 'getUserIdentifier')) {
@@ -64,6 +59,6 @@ class LoginController extends AbstractController
             $tokenData['username'] = $this->getUser()->getUsername();
         }
 
-        return new JsonResponse(['token' => $this->jwtCoder->encode($tokenData)]);
+        return $this->jwtCoder->encode($tokenData);
     }
 }
