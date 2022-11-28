@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.5] - 2022-11-28
+- Changed: require at least php 7.4
+- Fixed: login routes throw errors
+
 ## [2.2.4] - 2022-11-23
 - Fixed: class load error ([#15])
 - Fixed: error if Accept-Language header is missing ([#18], thanks to [@fritzmg])
