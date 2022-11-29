@@ -58,11 +58,14 @@ services:
       - "@contao.framework"
       - "@huh.api.jwt_coder"
       - "@translator"
+
   huh.api.manager.resource:
     class: HeimrichHannot\ApiBundle\Manager\ApiResourceManager
     public: true
     arguments:
       - "@contao.framework"
+  HeimrichHannot\ApiBundle\Manager\ApiResourceManager: '@huh.api.manager.resource'
+
   huh.api.resource.default:
     class: HeimrichHannot\ApiBundle\ApiResource\CalendarEventResource
     arguments:
