@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.6] - 2023-07-18
+- Fixed: compatibility issues with contao 4.13 ([#21])
+
 ## [2.2.5] - 2022-11-28
 - Changed: require at least php 7.4
 - Fixed: login routes throw errors
@@ -78,9 +81,11 @@ All notable changes to this project will be documented in this file.
 
 [@fritzmg]: https://github.com/fritzmg
 [@srhinow]: https://github.com/srhinow
-[#18]: https://github.com/heimrichhannot/contao-api-bundle/pull/18
-[#10]: https://github.com/heimrichhannot/contao-api-bundle/pull/10
-[#15]: https://github.com/heimrichhannot/contao-api-bundle/issues/15
-[#12]: https://github.com/heimrichhannot/contao-api-bundle/issues/12
-[#8]: https://github.com/heimrichhannot/contao-api-bundle/issues/8
+
 [#7]: https://github.com/heimrichhannot/contao-api-bundle/issues/7
+[#8]: https://github.com/heimrichhannot/contao-api-bundle/issues/8
+[#10]: https://github.com/heimrichhannot/contao-api-bundle/pull/10
+[#12]: https://github.com/heimrichhannot/contao-api-bundle/issues/12
+[#15]: https://github.com/heimrichhannot/contao-api-bundle/issues/15
+[#18]: https://github.com/heimrichhannot/contao-api-bundle/pull/18
+[#21]: https://github.com/heimrichhannot/contao-api-bundle/pull/21
