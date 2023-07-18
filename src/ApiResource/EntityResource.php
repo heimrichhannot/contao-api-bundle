@@ -10,6 +10,7 @@ namespace HeimrichHannot\ApiBundle\ApiResource;
 
 use Contao\Controller;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\Input;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
@@ -231,6 +232,9 @@ abstract class EntityResource implements ResourceInterface
     {
         $output = [];
         $dc = $this->container->get('huh.utils.dca')->getDCTable($instance::getTable(), $instance);
+
+        Input::setGet('id', $instance->id);
+        Input::setGet('act', 'show');
 
         $dca = $GLOBALS['TL_DCA'][$instance::getTable()];
 

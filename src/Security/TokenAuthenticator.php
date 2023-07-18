@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -23,7 +23,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        $this->translator->setLocale($request->getPreferredLanguage());
+        if (null !== ($locale = $request->getPreferredLanguage())) {
+            $this->translator->setLocale($locale);
+        }
 
         if (!$request->headers->has('Authorization')) {
             throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_authorization_header'));

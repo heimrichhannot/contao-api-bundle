@@ -8,8 +8,11 @@
 
 namespace HeimrichHannot\ApiBundle\Controller;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
+use HeimrichHannot\ApiBundle\Manager\ApiResourceManager;
+use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,6 +70,8 @@ class ResourceController extends AbstractController
      */
     public function listAction(string $alias, Request $request)
     {
+        $this->container->get('contao.framework')->initialize();
+
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
             return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
@@ -121,6 +126,15 @@ class ResourceController extends AbstractController
         return $this->json($resource->delete($id, $request, $this->getUser()));
     }
 
+    public static function getSubscribedServices()
+    {
+        $services = parent::getSubscribedServices();
+        $services['huh.api.manager.resource'] = ApiResourceManager::class;
+        $services['contao.framework'] = ContaoFramework::class;
+
+        return $services;
+    }
+
     /**
      * Determine if action is allowed.
      */
@@ -134,8 +148,7 @@ class ResourceController extends AbstractController
 
         switch ($app->type) {
             case $resourceManager::TYPE_ENTITY_RESOURCE:
-                if (null === ($action = $this->container->get('huh.utils.model')->findOneModelInstanceBy('tl_api_app_action',
-                        ['tl_api_app_action.pid=?', 'tl_api_app_action.type=?'], [$app->id, $request->attributes->get('_route')]))) {
+                if (null === ($action = ApiAppActionModel::findOneBy(['tl_api_app_action.pid=?', 'tl_api_app_action.type=?'], [$app->id, $request->attributes->get('_route')]))) {
                     return false;
                 }
 
